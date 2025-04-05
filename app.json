@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test",
-    "slug": "test",
+    "name": "prueba_concepto_mobile",
+    "slug": "prueba_concepto_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
