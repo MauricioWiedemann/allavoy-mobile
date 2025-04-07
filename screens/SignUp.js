@@ -3,9 +3,10 @@ import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 
-  export function Login() {
+  export function SignUp() {
     const navigation = useNavigation();
     const [form, setForm] = useState({
+      userName: '',
       email: '',
       password: '',
     });
@@ -19,13 +20,22 @@ import { Button } from '@react-navigation/elements';
               style={styles.headerImg}
               source={require('./../assets/logo.png')}/>
             <Text style={styles.title}>
-              Ingresar a <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
-            </Text>
-            <Text style={styles.subtitle}>
-              Obten acceso a boletos de omnibus y mas!
+              Registrarse en <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
             </Text>
           </View>
           <View style={styles.form}>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Nombre de usuario</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={userName => setForm({ ...form, userName })}
+                placeholder="Viajero123"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.userName} />
+            </View>
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Correo</Text>
               <TextInput
@@ -52,27 +62,20 @@ import { Button } from '@react-navigation/elements';
                 value={form.password} />
             </View>
             <View style={styles.formAction}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
+              <TouchableOpacity onPress={() => {
+                  // handle onPress Funcion para registrar usuario
                 }}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>Ingresar</Text>
+                  <Text style={styles.btnText}>Registrarse</Text>
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                // handle link
-              }}>
-              <Text style={styles.formLink}>¿Olvidó su contraseña?</Text>
-            </TouchableOpacity>
           </View>
         </View>
-        <Button onPress={() => navigation.navigate('Registrarse')}>
+        <Button onPress={() => navigation.navigate('Loguearse')}>
           <Text style={styles.formFooter}>
-            No tiene cuenta?{' '}
-            <Text style={{ textDecorationLine: 'underline' }}>Registrar Usuario</Text>
+            ¿Ya se encuentra registrado?{' '}
+            <Text style={{ textDecorationLine: 'underline' }}>Loguearse</Text>
           </Text>
         </Button>
       </SafeAreaView>
@@ -174,4 +177,4 @@ import { Button } from '@react-navigation/elements';
     },
   });
 
-export default Login;
+export default SignUp;

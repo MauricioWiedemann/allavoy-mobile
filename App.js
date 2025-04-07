@@ -1,18 +1,27 @@
+import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { View, Text } from 'react-native';
+import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Login from './screens/Login';
+import SignUp from './screens/SignUp';
 
-export default function App() {
-  return <Login />;
+const Stack = createNativeStackNavigator();
+
+function RootStack() {
+  return (
+    <Stack.Navigator initialRouteName="Loguearse">
+      <Stack.Screen name="Loguearse" component={Login} />
+      <Stack.Screen name="Registrarse" component={SignUp} />
+    </Stack.Navigator>
+  );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff888',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
+  );
+}
