@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+
 import React, { useState, useEffect } from "react";
 import {
   Text,
@@ -11,21 +12,21 @@ import {
 } from "react-native";
 import axios from "axios";
 
-export default function App() {
+export default function Users() {
+  // definicion de variables y sus sets
   const [data, setData] = useState([]);
   const [page, setPages] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
 
+  //funciona para obtener los usuarios de la api
   const getdata = () => {
-    setIsLoading(true);
     axios
-      .get("https://randomuser.me/api/?page=${page}&results=10")
+      .get("https://randomuser.me/api/?page=${page}&results=15")
       .then((res) => {
         setData([...data, ...res.data.results]);
       });
-    setIsLoading(false);
   };
 
+  //funcion que crea la View con los datos de un usuario
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemWrapperStyle}>
@@ -36,14 +37,17 @@ export default function App() {
         <View style={styles.contentWrapperStyle}>
           <Text
             style={styles.txtNameStyle}
-          >{`${item.name.title} ${item.name.first} ${item.name.last}`}</Text>
-          <Text style={styles.txtEmailStyle}>{item.email}</Text>
+          >{`${item.name.first} ${item.name.last}`}</Text>
+          <Text style={styles.txtCountryStyle}>
+            {item.location.city}, {item.location.country}
+          </Text>
         </View>
       </View>
     );
   };
 
-  const renderLoader = () => {
+  //funcion que muestra la rueda de carga mientras se buscan los datos
+  const renderLoadingWheel = () => {
     return (
       <View style={styles.loaderStyle}>
         <ActivityIndicator size="large" />
@@ -51,21 +55,25 @@ export default function App() {
     );
   };
 
+  //funacion que carga un nuevo item
   const loadMoreItem = () => {
     setPages(page + 1);
+    console.log(page);
   };
 
+  //llamar a la funcion getdata() cada vez que cambia page
   useEffect(() => {
     getdata();
   }, [page]);
 
+  //flatlist donde se muestran todos los usuarios
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.email}
-        ListFooterComponent={renderLoader}
+        keyExtractor={(item) => item.login.uuid}
+        ListFooterComponent={renderLoadingWheel}
         onEndReached={loadMoreItem}
         onEndReachedThreshold={0}
       />
@@ -74,11 +82,12 @@ export default function App() {
   );
 }
 
+//estilos
 const styles = StyleSheet.create({
   itemWrapperStyle: {
     flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 14,
     borderBottomWidth: 1,
     borderColor: "#fff",
   },
@@ -92,10 +101,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   txtNameStyle: {
-    fontSize: 16,
+    fontSize: 18,
+    marginTop: 6,
   },
-  txtEmailStyle: {
+  txtCountryStyle: {
     color: "#777",
+    marginBottom: 6,
   },
   loaderStyle: {
     marginVertical: 16,
