@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/native";
 
 import { Button } from "@react-navigation/elements";
+import axios from "axios";
 
 export function Login() {
   const navigation = useNavigation();
@@ -24,6 +25,19 @@ export function Login() {
     email: "",
     password: "",
   });
+
+  const checkLogin = async () => {
+    try {
+      const resp = await axios.post("http://10.0.2.2:8080/auth/login", {
+        mail: form.email,
+        pass: form.password,
+      });
+      console.log(resp.data.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
       <View style={styles.container}>
@@ -76,7 +90,7 @@ export function Login() {
               }}
             >
               <Button
-                onPress={() => navigation.navigate("Usuarios")}
+                onPress={checkLogin} //navigation.navigate("Usuarios")
                 style={styles.btn}
               >
                 <Text style={styles.btnText}>Ingresar</Text>
