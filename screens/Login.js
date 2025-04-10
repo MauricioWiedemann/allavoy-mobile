@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
+import { AuthContext } from '../context/AuthContext';
 
   export function Login() {
     const navigation = useNavigation();
+    const {loginAuth} = useContext(AuthContext);
     const [form, setForm] = useState({
       email: '',
       password: '',
@@ -52,10 +54,8 @@ import { Button } from '@react-navigation/elements';
                 value={form.password} />
             </View>
             <View style={styles.formAction}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}>
+              <TouchableOpacity 
+                onPress={() => {loginAuth()}}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>

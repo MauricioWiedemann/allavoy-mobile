@@ -4,24 +4,20 @@ import { View, Text } from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Login from './screens/Login';
-import SignUp from './screens/SignUp';
+import AuthStack from './navigation/AuthStack';
+import AppStack from './navigation/AppStack';
+import { AuthProvider } from './context/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
-function RootStack() {
-  return (
-    <Stack.Navigator initialRouteName="Loguearse">
-      <Stack.Screen name="Loguearse" component={Login} />
-      <Stack.Screen name="Registrarse" component={SignUp} />
-    </Stack.Navigator>
-  );
-}
+
+//<AuthProvider>    
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+      <NavigationContainer>    
+        <AuthStack />
+        {/*<AppStack />*/}
+      </NavigationContainer>
   );
 }
