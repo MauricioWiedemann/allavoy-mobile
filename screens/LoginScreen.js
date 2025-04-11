@@ -6,7 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 
   export function Login() {
     const navigation = useNavigation();
-    const {loginAuth} = useContext(AuthContext);
+    const {login} = useContext(AuthContext);
     const [form, setForm] = useState({
       email: '',
       password: '',
@@ -55,7 +55,7 @@ import { AuthContext } from '../context/AuthContext';
             </View>
             <View style={styles.formAction}>
               <TouchableOpacity 
-                onPress={() => {loginAuth()}}>
+                onPress={() => {login(setForm.email,setForm.password)}}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>
