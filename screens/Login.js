@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Keyboard,
 } from "react-native";
 
 import {
@@ -26,13 +27,29 @@ export function Login() {
     password: "",
   });
 
+  //Ver si el teclado esta abierto o no
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  useEffect(() => {
+    const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+      setIsKeyboardOpen(true)
+    );
+    const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+      setIsKeyboardOpen(false)
+    );
+  });
+
   const checkLogin = async () => {
     try {
       const resp = await axios.post("http://10.0.2.2:8080/auth/login", {
         mail: form.email,
         pass: form.password,
       });
-      console.log(resp.data.token);
+      if (resp.data.token != "") {
+        navigation.navigate("Usuarios");
+      } else {
+        console.log(form.mail);
+        //mostrar algun msg de error con las credenciales
+      }
     } catch (error) {
       console.log(error);
     }
@@ -106,14 +123,16 @@ export function Login() {
           </TouchableOpacity>
         </View>
       </View>
-      <Button onPress={() => navigation.navigate("Registrarse")}>
-        <Text style={styles.formFooter}>
-          No tiene cuenta?{" "}
-          <Text style={{ textDecorationLine: "underline" }}>
-            Registrar Usuario
+      {!isKeyboardOpen && (
+        <Button onPress={() => navigation.navigate("Registrarse")}>
+          <Text style={styles.formFooter}>
+            No tiene cuenta?{" "}
+            <Text style={{ textDecorationLine: "underline" }}>
+              Registrar Usuario
+            </Text>
           </Text>
-        </Text>
-      </Button>
+        </Button>
+      )}
     </SafeAreaView>
   );
 }
