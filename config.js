@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://localhost/we-jwt-test/wp-json';
+export const BASE_URL = "http://10.0.2.2:8080/auth";

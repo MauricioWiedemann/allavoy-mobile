@@ -55,7 +55,7 @@ import { AuthContext } from '../context/AuthContext';
             </View>
             <View style={styles.formAction}>
               <TouchableOpacity 
-                onPress={() => {login(setForm.email,setForm.password)}}>
+                onPress={() => {login(form.email,form.password)}}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>

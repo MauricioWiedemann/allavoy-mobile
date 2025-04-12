@@ -64,7 +64,6 @@ export default function Users() {
   //funacion que carga un nuevo item
   const loadMoreItem = () => {
     setPages(page + 1);
-    console.log(page);
   };
 
   //llamar a la funcion getdata() cada vez que cambia page
