@@ -1,33 +1,14 @@
-import * as React from "react";
-import { StatusBar } from "expo-status-bar";
-import { View, Text } from "react-native";
-import {
-  NavigationContainer,
-  createStaticNavigation,
-  useNavigation,
-} from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from 'react';
 
-import Login from "./screens/Login";
-import SignUp from "./screens/SignUp";
-import Users from "./screens/Users";
+import { AuthProvider } from './context/AuthContext';
+import AppNav from './navigation/AppNav';
 
-const Stack = createNativeStackNavigator();
-
-function RootStack() {
-  return (
-    <Stack.Navigator initialRouteName="Loguearse">
-      <Stack.Screen name="Loguearse" component={Login} />
-      <Stack.Screen name="Registrarse" component={SignUp} />
-      <Stack.Screen name="Usuarios" component={Users} />
-    </Stack.Navigator>
-  );
-}
+//const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <AuthProvider>
+      <AppNav />
+    </AuthProvider>
   );
 }
