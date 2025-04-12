@@ -1,5 +1,5 @@
-import React, { useState,useContext } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput,} from 'react-native';
+import React, { useState,useContext, useEffect } from 'react';
+import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
@@ -11,6 +11,16 @@ import { AuthContext } from '../context/AuthContext';
       email: '',
       password: '',
     });
+    //Ver si el teclado esta abierto o no
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+    useEffect(() => {
+      const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+          setIsKeyboardOpen(true)
+      );
+      const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+          setIsKeyboardOpen(false)
+      );
+    })
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
         <View style={styles.container}>
@@ -69,12 +79,14 @@ import { AuthContext } from '../context/AuthContext';
             </TouchableOpacity>
           </View>
         </View>
+        {!isKeyboardOpen && (
         <Button onPress={() => navigation.navigate('Registrarse')}>
           <Text style={styles.formFooter}>
             No tiene cuenta?{' '}
             <Text style={{ textDecorationLine: 'underline' }}>Registrar Usuario</Text>
           </Text>
         </Button>
+        )}
       </SafeAreaView>
     );
   }

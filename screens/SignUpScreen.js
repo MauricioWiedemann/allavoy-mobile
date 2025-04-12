@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput,} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 
@@ -10,6 +10,16 @@ import { Button } from '@react-navigation/elements';
       email: '',
       password: '',
     });
+    //Ver si el teclado esta abierto o no
+        const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+        useEffect(() => {
+          const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+              setIsKeyboardOpen(true)
+          );
+          const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+              setIsKeyboardOpen(false)
+          );
+        })
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
         <View style={styles.container}>
@@ -72,12 +82,14 @@ import { Button } from '@react-navigation/elements';
             </View>
           </View>
         </View>
-        <Button onPress={() => navigation.navigate('Loguearse')}>
-          <Text style={styles.formFooter}>
-            ¿Ya se encuentra registrado?{' '}
-            <Text style={{ textDecorationLine: 'underline' }}>Loguearse</Text>
-          </Text>
-        </Button>
+        {!isKeyboardOpen && (
+          <Button onPress={() => navigation.navigate('Loguearse')}>
+            <Text style={styles.formFooter}>
+              ¿Ya se encuentra registrado?{' '}
+              <Text style={{ textDecorationLine: 'underline' }}>Loguearse</Text>
+            </Text>
+          </Button>
+        )}
       </SafeAreaView>
     );
   }

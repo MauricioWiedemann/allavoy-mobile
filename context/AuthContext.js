@@ -18,15 +18,19 @@ export const AuthProvider = ({children}) => {
             pass: password,
         })
         .then(res => {
-            let userInfo = res;
-            setUserInfo(userInfo);
-            setUserToken(userInfo.data.token)
+            if (res.data.token!=""){ //temporal para no hacer el login si las credenciales no son correctas
+                let userInfo = res;
+                setUserInfo(userInfo);
+                setUserToken(userInfo.data.token)
 
-            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-            AsyncStorage.setItem('userToken', userInfo.data.token);
+                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+                AsyncStorage.setItem('userToken', userInfo.data.token);
 
-            //console.log(userInfo);
-            console.log('User Token: ' + userInfo.data.token);
+                //console.log(userInfo);
+                console.log('User Token: ' + userInfo.data.token);
+            } else {
+                console.log("Credenciales incorrectas");
+            }
         })
         .catch(e => {
             console.log(`isLogged in error ${e}`);
