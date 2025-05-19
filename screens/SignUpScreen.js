@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
   export function SignUp() {
     const navigation = useNavigation();
     const [form, setForm] = useState({
-      userName: '',
       email: '',
+      nombre: '',
+      apellido: '',
+      cedula: '',
+      fechaNac: '',
       password: '',
     });
     //Ver si el teclado esta abierto o no
@@ -35,18 +39,6 @@ import { Button } from '@react-navigation/elements';
           </View>
           <View style={styles.form}>
             <View style={styles.input}>
-              <Text style={styles.inputLabel}>Nombre de usuario</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={userName => setForm({ ...form, userName })}
-                placeholder="Viajero123"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.userName} />
-            </View>
-            <View style={styles.input}>
               <Text style={styles.inputLabel}>Correo</Text>
               <TextInput
                 autoCapitalize="none"
@@ -54,10 +46,58 @@ import { Button } from '@react-navigation/elements';
                 clearButtonMode="while-editing"
                 keyboardType="email-address"
                 onChangeText={email => setForm({ ...form, email })}
-                placeholder="pepe@mail.com"
+                placeholder="pepegon@mail.com"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={form.email} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Nombre</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={nombre => setForm({ ...form, nombre })}
+                placeholder="Pepe"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.nombre} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Apellido</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={apellido => setForm({ ...form, apellido })}
+                placeholder="Gonzales"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.apellido} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Cedula</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={cedula => setForm({ ...form, cedula })}
+                placeholder="1234567-8"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.cedula} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Fecha de Nacimiento</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={fechaNac => setForm({ ...form, fechaNac })}
+                placeholder="DD-MM-YYYY"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.fechaNac} />
             </View>
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Constraseña</Text>
@@ -74,6 +114,12 @@ import { Button } from '@react-navigation/elements';
             <View style={styles.formAction}>
               <TouchableOpacity onPress={() => {
                   // handle onPress Funcion para registrar usuario
+                  login(form.email,
+                    form.nombre,
+                    form.apellido,
+                    form.cedula,
+                    form.fechaNac,
+                    form.password)
                 }}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Registrarse</Text>
@@ -101,10 +147,10 @@ import { Button } from '@react-navigation/elements';
       padding: 24,
     },
     title: {
-      fontSize: 31,
+      fontSize: 35,
       fontWeight: '700',
       color: '#1D2A32',
-      marginBottom: 6,
+      marginBottom: 3,
     },
     subtitle: {
       fontSize: 15,
@@ -115,13 +161,13 @@ import { Button } from '@react-navigation/elements';
     header: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 36,
+      marginVertical: 30,
     },
     headerImg: {
-      width: 80,
-      height: 80,
+      width: 250,
+      height: 180,
       alignSelf: 'center',
-      marginBottom: 36,
+      marginBottom: 10,
     },
     /** Form */
     form: {
@@ -130,8 +176,8 @@ import { Button } from '@react-navigation/elements';
       flexBasis: 0,
     },
     formAction: {
-      marginTop: 4,
-      marginBottom: 16,
+      marginTop: 5,
+      marginBottom: 15,
     },
     formLink: {
       fontSize: 16,
@@ -145,17 +191,16 @@ import { Button } from '@react-navigation/elements';
       fontWeight: '600',
       color: '#222',
       textAlign: 'center',
-      letterSpacing: 0.15,
     },
     /** Input */
     input: {
-      marginBottom: 16,
+      marginBottom: 10,
     },
     inputLabel: {
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: '600',
       color: '#222',
-      marginBottom: 8,
+      marginBottom: 0,
     },
     inputControl: {
       height: 50,
@@ -163,9 +208,8 @@ import { Button } from '@react-navigation/elements';
       paddingHorizontal: 16,
       borderRadius: 12,
       fontSize: 15,
-      fontWeight: '500',
       color: '#222',
-      borderWidth: 1,
+      borderWidth: 2,
       borderColor: '#C9D3DB',
       borderStyle: 'solid',
     },
@@ -180,11 +224,12 @@ import { Button } from '@react-navigation/elements';
       borderWidth: 1,
       backgroundColor: '#075eec',
       borderColor: '#075eec',
+      marginTop: 25
     },
     btnText: {
-      fontSize: 18,
+      fontSize: 25,
       lineHeight: 26,
-      fontWeight: '600',
+      fontWeight: '1000',
       color: '#fff',
     },
   });

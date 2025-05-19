@@ -98,10 +98,10 @@ import { AuthContext } from '../context/AuthContext';
       padding: 24,
     },
     title: {
-      fontSize: 31,
+      fontSize: 35,
       fontWeight: '700',
       color: '#1D2A32',
-      marginBottom: 6,
+      marginBottom: 3,
     },
     subtitle: {
       fontSize: 15,
@@ -112,13 +112,13 @@ import { AuthContext } from '../context/AuthContext';
     header: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 36,
+      marginVertical: 30,
     },
     headerImg: {
-      width: 80,
-      height: 80,
+      width: 250,
+      height: 180,
       alignSelf: 'center',
-      marginBottom: 36,
+      marginBottom: 10,
     },
     /** Form */
     form: {
@@ -127,7 +127,7 @@ import { AuthContext } from '../context/AuthContext';
       flexBasis: 0,
     },
     formAction: {
-      marginTop: 4,
+      marginTop: 25,
       marginBottom: 16,
     },
     formLink: {
@@ -146,13 +146,13 @@ import { AuthContext } from '../context/AuthContext';
     },
     /** Input */
     input: {
-      marginBottom: 16,
+      marginBottom: 10,
     },
     inputLabel: {
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: '600',
       color: '#222',
-      marginBottom: 8,
+      marginBottom: 0,
     },
     inputControl: {
       height: 50,
@@ -179,9 +179,9 @@ import { AuthContext } from '../context/AuthContext';
       borderColor: '#075eec',
     },
     btnText: {
-      fontSize: 18,
+      fontSize: 25,
       lineHeight: 26,
-      fontWeight: '600',
+      fontWeight: '1000',
       color: '#fff',
     },
   });
