@@ -4,12 +4,11 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
 
-  export function Login() {
+  export function ForgotPass() {
     const navigation = useNavigation();
-    const {login} = useContext(AuthContext);
+    const {forgotPass} = useContext(AuthContext);
     const [form, setForm] = useState({
       email: '',
-      password: '',
     });
     //Ver si el teclado esta abierto o no
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -31,10 +30,10 @@ import { AuthContext } from '../context/AuthContext';
               style={styles.headerImg}
               source={require('./../assets/logo.png')}/>
             <Text style={styles.title}>
-              Ingresar a <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
+                <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
             </Text>
-            <Text style={styles.subtitle}>
-              Obten acceso a boletos de omnibus y mas!
+            <Text style={styles.title}>
+              Recuperar contraseña 
             </Text>
           </View>
           <View style={styles.form}>
@@ -51,40 +50,25 @@ import { AuthContext } from '../context/AuthContext';
                 style={styles.inputControl}
                 value={form.email} />
             </View>
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Constraseña</Text>
-              <TextInput
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={password => setForm({ ...form, password })}
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={form.password} />
-            </View>
             <View style={styles.formAction}>
               <TouchableOpacity 
-                onPress={() => {login(form.email,form.password)}}>
+                onPress={() => {forgotPass(form.email)}}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>Ingresar</Text>
+                  <Text style={styles.btnText}>Enviar mail de recuperación</Text>
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('RecuperarPass')}>
-              <Text style={styles.formLink}>¿Olvidó su contraseña?</Text>
-            </TouchableOpacity>
+            <View style={styles.formAction}>
+              <TouchableOpacity
+                 onPress={() => navigation.navigate('Loguearse')}>
+                <View style={styles.btnCancel} >
+                  <Text style={styles.btnTextCancel}>Cancelar</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
           </View>
         </View>
-        {!isKeyboardOpen && (
-        <Button onPress={() => navigation.navigate('Registrarse')}>
-          <Text style={styles.formFooter}>
-            No tiene cuenta?{' '}
-            <Text style={{ textDecorationLine: 'underline' }}>Registrar Usuario</Text>
-          </Text>
-        </Button>
-        )}
       </SafeAreaView>
     );
   }
@@ -99,7 +83,7 @@ import { AuthContext } from '../context/AuthContext';
       fontSize: 35,
       fontWeight: '700',
       color: '#1D2A32',
-      marginBottom: 3,
+      marginBottom: 13,
     },
     subtitle: {
       fontSize: 15,
@@ -125,8 +109,8 @@ import { AuthContext } from '../context/AuthContext';
       flexBasis: 0,
     },
     formAction: {
-      marginTop: 25,
-      marginBottom: 16,
+      marginTop: 15,
+      marginBottom: 0,
     },
     formLink: {
       fontSize: 16,
@@ -144,7 +128,7 @@ import { AuthContext } from '../context/AuthContext';
     },
     /** Input */
     input: {
-      marginBottom: 10,
+      marginBottom: 40,
     },
     inputLabel: {
       fontSize: 15,
@@ -182,6 +166,24 @@ import { AuthContext } from '../context/AuthContext';
       fontWeight: '1000',
       color: '#fff',
     },
+    /** Button Cancel*/
+    btnCancel: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 30,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderWidth: 5,
+      backgroundColor: '#FFFFFF',
+      borderColor: '#075eec',
+    },
+    btnTextCancel: {
+      fontSize: 25,
+      lineHeight: 26,
+      fontWeight: '1000',
+      color: '#000000',
+    },
   });
 
-export default Login;
+export default ForgotPass;

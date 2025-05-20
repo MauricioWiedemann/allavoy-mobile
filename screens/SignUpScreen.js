@@ -114,7 +114,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
             <View style={styles.formAction}>
               <TouchableOpacity onPress={() => {
                   // handle onPress Funcion para registrar usuario
-                  login(form.email,
+                  signup(form.email,
                     form.nombre,
                     form.apellido,
                     form.cedula,
