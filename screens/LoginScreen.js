@@ -75,15 +75,19 @@ import { AuthContext } from '../context/AuthContext';
               onPress={() => navigation.navigate('RecuperarPass')}>
               <Text style={styles.formLink}>¿Olvidó su contraseña?</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SearchScreen')}>
+              <Text style={styles.formLink}>atajo busqueda y compra</Text>
+            </TouchableOpacity>
           </View>
         </View>
         {!isKeyboardOpen && (
-        <Button onPress={() => navigation.navigate('Registrarse')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Registrarse')}>
           <Text style={styles.formFooter}>
             No tiene cuenta?{' '}
             <Text style={{ textDecorationLine: 'underline' }}>Registrar Usuario</Text>
           </Text>
-        </Button>
+        </TouchableOpacity>
         )}
       </SafeAreaView>
     );

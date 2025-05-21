@@ -5,6 +5,13 @@ import Login from '../screens/LoginScreen';
 import SignUp from '../screens/SignUpScreen';
 import ForgotPass from '../screens/ForgotPassword';
 
+///////////////////////////////////////////////
+//sacar luego de test, van solo en appstack.js
+///////////////////////////////////////////////
+import SearchBus from '../screens/SearchScreen';
+///////////////////////////////////////////////
+///////////////////////////////////////////////
+
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
@@ -13,6 +20,7 @@ const AuthStack = () => {
         <Stack.Screen name="Loguearse" component={Login}/>
         <Stack.Screen name="Registrarse" component={SignUp}/>
         <Stack.Screen name="RecuperarPass" component={ForgotPass}/>
+        <Stack.Screen name="SearchScreen" component={SearchBus}/>
     </Stack.Navigator>
   );
 };

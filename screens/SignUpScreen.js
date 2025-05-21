@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
   export function SignUp() {
     const navigation = useNavigation();
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [form, setForm] = useState({
       email: '',
       nombre: '',
@@ -14,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
       fechaNac: '',
       password: '',
     });
+
     //Ver si el teclado esta abierto o no
         const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
         useEffect(() => {
@@ -98,7 +100,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={form.fechaNac} />
-            </View>
+            </View>                        
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Constraseña</Text>
               <TextInput
