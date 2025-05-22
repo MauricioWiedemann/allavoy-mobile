@@ -9,6 +9,7 @@ import ForgotPass from '../screens/ForgotPassword';
 //sacar luego de test, van solo en appstack.js
 ///////////////////////////////////////////////
 import SearchBus from '../screens/SearchScreen';
+import TripList from '../screens/TripListScreen';
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 
@@ -21,6 +22,7 @@ const AuthStack = () => {
         <Stack.Screen name="Registrarse" component={SignUp}/>
         <Stack.Screen name="RecuperarPass" component={ForgotPass}/>
         <Stack.Screen name="SearchScreen" component={SearchBus}/>
+        <Stack.Screen name="TripListScreen" component={TripList}/>
     </Stack.Navigator>
   );
 };

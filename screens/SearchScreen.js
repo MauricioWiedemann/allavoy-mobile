@@ -208,6 +208,10 @@ import axios from 'axios';
                   <Text style={styles.btnText}>Buscar</Text>
                 </View>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('TripListScreen')}>
+                <Text style={styles.formLink}>atajo listado de viajes</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
