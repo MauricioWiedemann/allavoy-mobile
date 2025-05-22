@@ -10,6 +10,7 @@ import ForgotPass from '../screens/ForgotPassword';
 ///////////////////////////////////////////////
 import SearchBus from '../screens/SearchScreen';
 import TripList from '../screens/TripListScreen';
+import SeatSelecionPage from '../screens/SeatSelecionPage';
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 
@@ -23,6 +24,7 @@ const AuthStack = () => {
         <Stack.Screen name="RecuperarPass" component={ForgotPass}/>
         <Stack.Screen name="SearchScreen" component={SearchBus}/>
         <Stack.Screen name="TripListScreen" component={TripList}/>
+        <Stack.Screen name="SeatSelecionPage" component={SeatSelecionPage}/>
     </Stack.Navigator>
   );
 };

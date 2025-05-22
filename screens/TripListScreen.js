@@ -90,7 +90,7 @@ import axios from "axios";
           <Text style={styles.title}>Resultados de Viajes</Text>
             <View style={styles.formAction}>
                 <Text style={styles.subtitle}>
-                    <Text style={{ fontSize: 20 }}>Origen: {localidadOrigen} -> Destino: {localidadDestino}</Text>
+                    <Text style={{ fontSize: 20 }}>Origen: {localidadOrigen} -{'>'} Destino: {localidadDestino}</Text>
                 </Text>
                 <Text style={styles.subtitle}>
                     <Text style={{ fontSize: 20 }}>Fecha: {fechaViaje}</Text>
