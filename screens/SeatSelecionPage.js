@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
+import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
+
 
 export function SeatSelecionPage({ route }) {
   const { trip } = route.params;
+
+  const navigation = useNavigation();
+  const {login} = useContext(AuthContext);
+
   const [seatMap, setSeatMap] = useState([
     { fila: 1, asientos: [1, 2, 3, 4] },
     { fila: 2, asientos: [5, 6, 7, 8] },
@@ -20,7 +27,6 @@ export function SeatSelecionPage({ route }) {
 
   /*
   useEffect(() => {
-    // Reemplaza la URL por la de tu API real
     axios.get('https://tu-api.com/asientos?tripId=' + trip.id)
       .then(res => setSeatMap(res.data))
       .catch(() => setSeatMap([]));
@@ -93,7 +99,7 @@ export function SeatSelecionPage({ route }) {
         </View>
         <View style={styles.formAction}>
             <TouchableOpacity 
-            onPress={() => {login(form.email,form.password)}}>
+            onPress={() => navigation.navigate('CartDetail', { selectedSeats, trip })}>
             <View style={styles.btn}>
                 <Text style={styles.btnText}>Comprar asientos</Text>
             </View>
