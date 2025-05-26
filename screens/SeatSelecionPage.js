@@ -47,7 +47,8 @@ export function SeatSelecionPage({ route }) {
         </View>
         <Text style={styles.title}>Selecciona tus asientos</Text>
         <View style={{ 
-            marginVertical: 20, 
+            marginVertical: 20,
+            marginHorizontal: 70,
             backgroundColor: '#69a2ff', 
             borderRadius: 8, 
             padding: 10}}>
@@ -70,15 +71,25 @@ export function SeatSelecionPage({ route }) {
           ))}
         </View>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'left', marginTop: 0 }}>
-            <View style={[styles.seat, { backgroundColor: '#fff', borderWidth: 1, borderColor: '#e0e7ef' }]}/>
-            <View style={[styles.seat, { backgroundColor: '#6dc276', marginRight: 30 }]}/>
-            <View style={[styles.seat, { backgroundColor: '#b0b0b0', marginLeft: 50 }]}/> 
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8 }}>
-            <Text style={[styles.seatLegend, { textAlign: 'center' }]}>Disponible</Text>
-            <Text style={[styles.seatLegend, { textAlign: 'center', marginLeft: 16 }]}>Seleccionado</Text>
-            <Text style={[styles.seatLegend, { textAlign: 'center', marginLeft: 16 }]}>Ocupado</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 0, marginBottom: 10 }}>
+          <Image
+            alt="Disponible"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('./../assets/disponible.png')}
+          />
+          <Image
+            alt="seleccionado"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('./../assets/seleccionado.png')}
+          />
+          <Image
+            alt="ocupado"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('./../assets/ocupado.png')}
+          /> 
         </View>
         <View style={styles.formAction}>
             <TouchableOpacity 
@@ -95,8 +106,10 @@ export function SeatSelecionPage({ route }) {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
     padding: 24,
-    alignItems: 'center',
   },
   header: {
     alignItems: 'center',
@@ -160,6 +173,10 @@ const styles = StyleSheet.create({
       lineHeight: 26,
       fontWeight: '1000',
       color: '#fff',
+    },
+    formAction: {
+      marginTop: 25,
+      marginBottom: 16,
     },
 });
 
