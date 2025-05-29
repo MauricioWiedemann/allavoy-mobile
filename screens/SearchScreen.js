@@ -17,6 +17,7 @@ import axios from 'axios';
       destino: '',
       fecha: '',
       cantidad: 1,
+      idaVuelta: false,
     });
 
     // Origen
@@ -31,11 +32,11 @@ import axios from 'axios';
     const [loadingDestino, setLoadingDestino] = useState(false);
 
     
-    // Llamada API para obtener localidades en el dropdown
+    // llamada api para obtener localidades en el dropdown
     useEffect(() => {
         setLoadingOrigen(true);
         setLoadingDestino(true);
-        axios.get('https://tu-api.com/localidades') // Cambiar por endpoint real
+        axios.get('https://tu-api.com/localidades')
             .then(res => {
                 setOrigenItems(res.data.map(nombre => ({ value: nombre })));
                 setLoadingOrigen(false);
@@ -57,8 +58,16 @@ import axios from 'axios';
       setOrigenItems(localidades);
       setDestinoItems(localidades);
     }, []);
-    
 
+    const handleBuscar = () => {
+      navigation.navigate('TripListScreen', {
+        origen: form.origen,
+        destino: form.destino,
+        fecha: form.fecha,
+        cantidad: form.cantidad,
+        idaVuelta: form.idaVuelta,
+      });
+    };
 
     //Ver si el teclado esta abierto o no
         const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -196,21 +205,10 @@ import axios from 'axios';
 
 
             <View style={styles.formAction}>
-              <TouchableOpacity onPress={() => {
-                  // handle onPress Funcion para buscar viajes
-                  signup(form.origen,
-                    form.destino,
-                    form.fecha,
-                    form.cantidad,
-                    form.isChecked)
-                }}>
+              <TouchableOpacity onPress={handleBuscar}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Buscar</Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('TripListScreen')}>
-                <Text style={styles.formLink}>atajo listado de viajes</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -7,10 +7,24 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 
 
 export function CartDetail({ route }) {
-  const { trip, selectedSeats } = route.params;
+  const { trip, selectedSeats, origen, destino, fecha, cantidad, idaVuelta } = route.params;
   
   const navigation = useNavigation();
   const {login} = useContext(AuthContext);
+
+  const handlePayment = async () => {
+    try {
+      //const response = await axios.post('https://tu-api.com/comprarviaje', { trip });
+      //navigation.navigate('CompraExitosa');
+      //mock, sacar luego de conectar a la api
+      setTimeout(() => {
+        navigation.navigate('CompraExitosaScreen');
+      }, 1000);
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo completar la compra.');
+      navigation.navigate('SearchScreen');
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
@@ -26,11 +40,11 @@ export function CartDetail({ route }) {
         <Text style={styles.title}>Detalle de Compra</Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-          {trip.origen} Montevideo 
+          {origen} Montevideo 
         </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Destino: </Text>
-          {trip.destino} Canelones
+          {destino} Canelones
           </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Salida: </Text>
@@ -88,8 +102,7 @@ export function CartDetail({ route }) {
         </View>
 
         <View style={styles.formAction}>
-          <TouchableOpacity 
-            onPress={() => {forgotPass(form.email)}}>
+          <TouchableOpacity onPress={handlePayment}>
             <View style={styles.btn}>
               <Text style={styles.btnText}>Comprar con Paypal</Text>
             </View>
@@ -97,7 +110,7 @@ export function CartDetail({ route }) {
         </View>
         <View style={styles.formAction}>
           <TouchableOpacity
-              onPress={() => navigation.navigate('SearchScreen')}>
+              onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btnCancel} >
               <Text style={styles.btnTextCancel}>Cancelar</Text>
             </View>

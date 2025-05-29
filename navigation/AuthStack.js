@@ -5,15 +5,6 @@ import Login from '../screens/LoginScreen';
 import SignUp from '../screens/SignUpScreen';
 import ForgotPass from '../screens/ForgotPassword';
 
-///////////////////////////////////////////////
-//sacar luego de test, van solo en appstack.js
-///////////////////////////////////////////////
-import SearchBus from '../screens/SearchScreen';
-import TripList from '../screens/TripListScreen';
-import SeatSelecionPage from '../screens/SeatSelecionPage';
-import CartDetail from '../screens/CartDetail';
-///////////////////////////////////////////////
-///////////////////////////////////////////////
 
 const Stack = createNativeStackNavigator();
 
@@ -23,10 +14,6 @@ const AuthStack = () => {
         <Stack.Screen name="Loguearse" component={Login}/>
         <Stack.Screen name="Registrarse" component={SignUp}/>
         <Stack.Screen name="RecuperarPass" component={ForgotPass}/>
-        <Stack.Screen name="SearchScreen" component={SearchBus}/>
-        <Stack.Screen name="TripListScreen" component={TripList}/>
-        <Stack.Screen name="SeatSelecionPage" component={SeatSelecionPage}/>
-        <Stack.Screen name="CartDetail" component={CartDetail}/>
     </Stack.Navigator>
   );
 };

@@ -6,10 +6,10 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 
 
 export function SeatSelecionPage({ route }) {
-  const { trip } = route.params;
+  const { trip, origen, destino, fecha, cantidad, idaVuelta } = route.params;
 
   const navigation = useNavigation();
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const [seatMap, setSeatMap] = useState([
     { fila: 1, asientos: [1, 2, 3, 4] },
@@ -33,11 +33,13 @@ export function SeatSelecionPage({ route }) {
   }, [trip]);
     */
   const toggleSeat = (seatNumber) => {
-    setSelectedSeats(prev =>
-      prev.includes(seatNumber)
-        ? prev.filter(n => n !== seatNumber)
-        : [...prev, seatNumber]
-    );
+    if (selectedSeats.includes(seatNumber)) {
+      setSelectedSeats(prev => prev.filter(n => n !== seatNumber));
+    } else {
+      if (selectedSeats.length < cantidad) {
+        setSelectedSeats(prev => [...prev, seatNumber]);
+      }
+    }
   };
 
   return (
@@ -99,10 +101,19 @@ export function SeatSelecionPage({ route }) {
         </View>
         <View style={styles.formAction}>
             <TouchableOpacity 
-            onPress={() => navigation.navigate('CartDetail', { selectedSeats, trip })}>
-            <View style={styles.btn}>
-                <Text style={styles.btnText}>Comprar asientos</Text>
-            </View>
+              disabled={selectedSeats.length !== cantidad}
+              onPress={() => navigation.navigate('CartDetail', 
+              { selectedSeats, 
+                trip, 
+                origen, 
+                destino, 
+                fecha, 
+                cantidad, 
+                idaVuelta 
+              })}>
+              <View style={styles.btn}>
+                  <Text style={styles.btnText}>Comprar asientos</Text>
+              </View>
             </TouchableOpacity>
         </View>
       </ScrollView>

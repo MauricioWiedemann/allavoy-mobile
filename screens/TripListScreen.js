@@ -5,17 +5,19 @@ import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
 import axios from "axios";
 
-  export function TripList() {
+  export default function TripList({ route }) {
+    const { origen, destino, fecha, cantidad, idaVuelta } = route.params;
+
     const navigation = useNavigation();
     const {login} = useContext(AuthContext);
 
     const [data, setData] = useState([]);
     const [page, setPages] = useState(1);
-    const fechaViaje = '22-05-2025';
-    const localidadOrigen = 'Montevideo';
-    const localidadDestino = 'Colonia';
+    const fechaViaje = fecha;
+    const localidadOrigen = origen;
+    const localidadDestino = destino;
 
-    //funciona para obtener los usuarios de la api
+    //funcion para obtener los usuarios de la api
     const getdata = () => {
         axios
         .get("https://randomuser.me/api/?page=${page}&results=15")
@@ -24,12 +26,19 @@ import axios from "axios";
         });
     };
 
-    //funcion que crea la View con los datos de un usuario
+    //funcion que crea la View con los datos de un usuario 
     const renderItem = ({ item }) => {
         return (
         <TouchableOpacity
           style={styles.itemBox}
-          onPress={() => navigation.navigate('SeatSelecionPage', { trip: item })}
+          onPress={() => navigation.navigate('SeatSelecionPage', 
+            { trip: item,
+              origen: localidadOrigen,
+              destino: localidadDestino,
+              fecha: fechaViaje,
+              cantidad,
+              idaVuelta
+             })}
         >
             <View style={styles.contentWrapperStyle}>
                 <Text style={styles.txtNameStyle}>
@@ -238,5 +247,3 @@ import axios from "axios";
       color: '#666',
     },
   });
-
-export default TripList;

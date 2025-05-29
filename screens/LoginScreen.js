@@ -65,7 +65,13 @@ import { AuthContext } from '../context/AuthContext';
             </View>
             <View style={styles.formAction}>
               <TouchableOpacity 
-                onPress={() => {login(form.email,form.password)}}>
+                
+                onPress={() => {
+                  console.log('Email:', form.email);
+                  console.log('Password:', form.password);
+                  login(form.email,form.password);
+                  
+                  }}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>
@@ -74,10 +80,6 @@ import { AuthContext } from '../context/AuthContext';
             <TouchableOpacity
               onPress={() => navigation.navigate('RecuperarPass')}>
               <Text style={styles.formLink}>¿Olvidó su contraseña?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SearchScreen')}>
-              <Text style={styles.formLink}>atajo busqueda y compra</Text>
             </TouchableOpacity>
           </View>
         </View>

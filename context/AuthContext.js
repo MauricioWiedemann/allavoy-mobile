@@ -13,6 +13,25 @@ export const AuthProvider = ({children}) => {
 
     const login = (username, password) => {
         setIsLoading(true);
+            console.log('userToken en AppNav:', userToken);
+
+        // MOCK para admin/admin
+        if (username === 'admin' && password === 'admin') {
+            const mockUserInfo = {
+                data: {
+                    token: 'mock-token-admin',
+                    user: { name: 'Administrador', mail: 'admin' }
+                }
+            };
+            setUserInfo(mockUserInfo);
+            setUserToken('mock-token-admin');
+            AsyncStorage.setItem('userInfo', JSON.stringify(mockUserInfo));
+            AsyncStorage.setItem('userToken', 'mock-token-admin');
+            setIsLoading(false);
+            return;
+        }
+
+
         axios.post(`${BASE_URL}/login`, {
             mail: username,
             pass: password,

@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 
-import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer} from '@react-navigation/native';
 
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
@@ -10,7 +9,7 @@ import { AuthContext } from '../context/AuthContext';
 
 function AppNav () {
     const {isLoading, userToken} = useContext(AuthContext);
-
+    
     if (isLoading) {
         return(
             <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
@@ -21,6 +20,7 @@ function AppNav () {
     
     return (
         <NavigationContainer>
+            {console.log('userToetjtehheken en AppNav:', userToken)}
             {userToken !== null ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
     )
