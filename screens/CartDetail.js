@@ -40,12 +40,10 @@ export function CartDetail({ route }) {
         <Text style={styles.title}>Detalle de Compra</Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-          {origen} Montevideo 
+          {origen}
+          <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
+          {destino} 
         </Text>
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Destino: </Text>
-          {destino} Canelones
-          </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Salida: </Text>
           {trip.fecha_salida} 12/7/2025 18:20hs
@@ -63,7 +61,32 @@ export function CartDetail({ route }) {
           {selectedSeats.join(', ')}
         </Text>
 
-
+        {idaVuelta && (
+          <>
+            <Text style={[styles.txtDetail, { marginTop: 20 }]}>
+              <Text style={{fontWeight: 'bold'}}>Origen: </Text>
+              {destino}
+              <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
+              {origen}
+            </Text>
+            <Text style={styles.txtDetail}>
+              <Text style={{fontWeight: 'bold'}}>Salida: </Text>
+              {trip.fecha_salida} 12/7/2025 21:30hs
+            </Text>
+            <Text style={styles.txtDetail}>
+              <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
+              {trip.fecha_llegada} 12/7/2025 22:20hs
+            </Text>
+            <Text style={styles.txtDetail}>
+              <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
+              {trip.omnibus} 708
+            </Text>
+            <Text style={styles.txtDetail}>
+              <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
+              {selectedSeats.join(', ')}
+            </Text>
+          </>
+        )}
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: '50%', marginTop: 50, marginBottom: 0 }}>
           <Text style={[styles.txtDetail, { width: 130 }]}>
@@ -92,7 +115,7 @@ export function CartDetail({ route }) {
         }}>
 
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start',marginLeft: '50%', marginTop: 0, marginBottom: 100 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start',marginLeft: '50%', marginTop: 0, marginBottom: 20 }}>
           <Text style={[styles.txtDetail, { width: 130 }]}>
             <Text style={{fontWeight: 'bold'}}>Total:</Text>
           </Text>
@@ -107,8 +130,6 @@ export function CartDetail({ route }) {
               <Text style={styles.btnText}>Comprar con Paypal</Text>
             </View>
           </TouchableOpacity>
-        </View>
-        <View style={styles.formAction}>
           <TouchableOpacity
               onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btnCancel} >
@@ -217,6 +238,12 @@ const styles = StyleSheet.create({
   formAction: {
     marginTop: 15,
     marginBottom: 0,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 30,
+    gap: 10,
+    paddingHorizontal: 20,
   },
 });
 

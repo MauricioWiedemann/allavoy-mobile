@@ -112,7 +112,7 @@ export function SeatSelecionPage({ route }) {
                 idaVuelta 
               })}>
               <View style={styles.btn}>
-                  <Text style={styles.btnText}>Comprar asientos</Text>
+                  <Text style={styles.btnText}>Confirmar asientos</Text>
               </View>
             </TouchableOpacity>
         </View>
