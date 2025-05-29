@@ -18,6 +18,7 @@ import axios from 'axios';
       fecha: '',
       cantidad: 1,
       idaVuelta: false,
+      fechaRegreso: '',
     });
 
     // Origen
@@ -66,6 +67,7 @@ import axios from 'axios';
         fecha: form.fecha,
         cantidad: form.cantidad,
         idaVuelta: form.idaVuelta,
+        fechaRegreso: form.fechaRegreso,
       });
     };
 
@@ -136,7 +138,7 @@ import axios from 'axios';
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Fecha</Text>
               <TouchableOpacity
-                onPress={() => setShowDatePicker(true)}
+                onPress={() => setShowDatePicker('ida')}
                 style={[styles.inputControl, { justifyContent: 'center' }]}
               >
                 <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -145,13 +147,13 @@ import axios from 'axios';
                   </Text>
                 </View>
               </TouchableOpacity>
-              {showDatePicker && (
+              {showDatePicker === 'ida' && (
                 <DateTimePicker
                   value={form.fecha ? new Date(form.fecha) : new Date()}
                   mode="date"
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={(event, selectedDate) => {
-                    setShowDatePicker(Platform.OS === 'ios');
+                    setShowDatePicker(false);
                     if (selectedDate) {
                       const day = selectedDate.getDate().toString().padStart(2, '0');
                       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
@@ -202,7 +204,37 @@ import axios from 'axios';
               />          
             </View>
 
-
+            {form.idaVuelta && (
+              <View style={styles.input}>
+                <Text style={styles.inputLabel}>Fecha de regreso</Text>
+                <TouchableOpacity
+                  onPress={() => setShowDatePicker('regreso')}
+                  style={[styles.inputControl, { justifyContent: 'center' }]}
+                >
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Text style={{ color: form.fechaRegreso ? '#222' : '#6b7280', fontSize: 15, textAlignVertical: 'center' }}>
+                      {form.fechaRegreso ? form.fechaRegreso : 'Seleccionar fecha de regreso'}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                {showDatePicker === 'regreso' && (
+                  <DateTimePicker
+                    value={form.fechaRegreso ? new Date(form.fechaRegreso) : new Date()}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={(event, selectedDate) => {
+                      setShowDatePicker(false);
+                      if (selectedDate) {
+                        const day = selectedDate.getDate().toString().padStart(2, '0');
+                        const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+                        const year = selectedDate.getFullYear();
+                        setForm({ ...form, fechaRegreso: `${day}-${month}-${year}` });
+                      }
+                    }}
+                  />
+                )}
+              </View>
+            )}
 
             <View style={styles.formAction}>
               <TouchableOpacity onPress={handleBuscar}>

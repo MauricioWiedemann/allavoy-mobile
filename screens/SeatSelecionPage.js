@@ -6,7 +6,7 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 
 
 export function SeatSelecionPage({ route }) {
-  const { trip, origen, destino, fecha, cantidad, idaVuelta } = route.params;
+  const { trip, origen, destino, fecha, cantidad, idaVuelta, fechaRegreso } = route.params;
 
   const navigation = useNavigation();
   const { login } = useContext(AuthContext);
@@ -109,7 +109,7 @@ export function SeatSelecionPage({ route }) {
                 destino, 
                 fecha, 
                 cantidad, 
-                idaVuelta 
+                idaVuelta
               })}>
               <View style={styles.btn}>
                   <Text style={styles.btnText}>Confirmar asientos</Text>
