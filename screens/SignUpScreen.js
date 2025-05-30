@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import { BASE_URL } from "../config";
 
 export function SignUp() {
   const navigation = useNavigation();
@@ -20,7 +21,7 @@ export function SignUp() {
 /*
   const crearCuenta = async (form) => {
     try {
-      const response = await axios.post('https://tu-api.com/registro', {
+      const response = await axios.post(`${BASE_URL}/registro`, {
         email: form.email,
         nombre: form.nombre,
         apellido: form.apellido,
@@ -34,9 +35,9 @@ export function SignUp() {
     }
   };
   */
-  //MOCK! borrar:
+
+  // mock, borrar
   const crearCuenta = async (form) => {
-    // Mock: simula una respuesta exitosa sin llamar a la API real
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ ok: true, message: 'Usuario creado' });
@@ -164,9 +165,8 @@ export function SignUp() {
                   await crearCuenta(form);
                   Alert.alert(
                     'Registro exitoso',
-                    'Tu cuenta fue creada correctamente.',
-                    [
-                      {
+                    'Tu cuenta fue creada.',
+                    [{
                         text: 'OK',
                         onPress: () => navigation.navigate('Loguearse'),
                       },
@@ -213,7 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#929292',
   },
-  /** Header */
   header: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -225,7 +224,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 10,
   },
-  /** Form */
   form: {
     flexGrow: 1,
     flexShrink: 1,
@@ -248,7 +246,6 @@ const styles = StyleSheet.create({
     color: '#222',
     textAlign: 'center',
   },
-  /** Input */
   input: {
     marginBottom: 10,
   },
@@ -269,7 +266,6 @@ const styles = StyleSheet.create({
     borderColor: '#C9D3DB',
     borderStyle: 'solid',
   },
-  /** Button */
   btn: {
     flexDirection: 'row',
     alignItems: 'center',

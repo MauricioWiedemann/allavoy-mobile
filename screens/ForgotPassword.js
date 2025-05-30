@@ -2,70 +2,78 @@ import React, { useState,useContext, useEffect } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
-import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
+import { BASE_URL } from "../config";
 
-  export function ForgotPass() {
-    const navigation = useNavigation();
-    const {forgotPass} = useContext(AuthContext);
-    const [form, setForm] = useState({
-      email: '',
-    });
-    //Ver si el teclado esta abierto o no
-    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-    useEffect(() => {
-      const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
-          setIsKeyboardOpen(true)
-      );
-      const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
-          setIsKeyboardOpen(false)
-      );
-    })
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Image
-              alt="App Logo"
-              resizeMode="contain"
-              style={styles.headerImg}
-              source={require('./../assets/logo.png')}/>
-            <Text style={styles.title}>
-                <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
-            </Text>
-            <Text style={styles.title}>
-              Recuperar contraseña 
-            </Text>
+export function ForgotPass() {
+  const navigation = useNavigation();
+  const [form, setForm] = useState({ email: '' });
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  const handleForgotPass = async () => {
+    try {
+      await axios.post(`${BASE_URL}/forgotPass`, { email: form.email });
+      alert('Se ha enviado un mail de recuperación.');
+      navigation.navigate('Loguearse');
+    } catch (error) {
+      alert('Error al enviar el mail de recuperación.');
+    }
+  };
+
+  //Ver si el teclado esta abierto o no
+  useEffect(() => {
+    const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+        setIsKeyboardOpen(true)
+    );
+    const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+        setIsKeyboardOpen(false)
+    );
+  })
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            alt="App Logo"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('./../assets/logo.png')}/>
+          <Text style={styles.title}>
+              <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
+          </Text>
+          <Text style={styles.title}>
+            Recuperar contraseña 
+          </Text>
+        </View>
+        <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Correo</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              keyboardType="email-address"
+              onChangeText={email => setForm({ ...form, email })}
+              placeholder="pepe@mail.com"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.email} />
           </View>
-          <View style={styles.form}>
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Correo</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                keyboardType="email-address"
-                onChangeText={email => setForm({ ...form, email })}
-                placeholder="pepe@mail.com"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.email} />
-            </View>
-            <View style={styles.formAction}>
-              <TouchableOpacity 
-                onPress={() => {forgotPass(form.email)}}>
-                <View style={styles.btn}>
-                  <Text style={styles.btnText}>Enviar mail de recuperación</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.formAction}>
-              <TouchableOpacity
-                 onPress={() => navigation.navigate('Loguearse')}>
-                <View style={styles.btnCancel} >
-                  <Text style={styles.btnTextCancel}>Cancelar</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.formAction}>
+            <TouchableOpacity onPress={handleForgotPass}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Enviar mail de recuperación</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.formAction}>
+            <TouchableOpacity
+               onPress={() => navigation.navigate('Loguearse')}>
+              <View style={styles.btnCancel} >
+                <Text style={styles.btnTextCancel}>Cancelar</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
           </View>
         </View>
@@ -90,7 +98,6 @@ import { AuthContext } from '../context/AuthContext';
       fontWeight: '500',
       color: '#929292',
     },
-    /** Header */
     header: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -102,7 +109,6 @@ import { AuthContext } from '../context/AuthContext';
       alignSelf: 'center',
       marginBottom: 10,
     },
-    /** Form */
     form: {
       flexGrow: 1,
       flexShrink: 1,
@@ -126,7 +132,6 @@ import { AuthContext } from '../context/AuthContext';
       textAlign: 'center',
       letterSpacing: 0.15,
     },
-    /** Input */
     input: {
       marginBottom: 40,
     },
@@ -148,7 +153,6 @@ import { AuthContext } from '../context/AuthContext';
       borderColor: '#C9D3DB',
       borderStyle: 'solid',
     },
-    /** Button */
     btn: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -166,7 +170,6 @@ import { AuthContext } from '../context/AuthContext';
       fontWeight: '1000',
       color: '#fff',
     },
-    /** Button Cancel*/
     btnCancel: {
       flexDirection: 'row',
       alignItems: 'center',

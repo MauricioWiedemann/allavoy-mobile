@@ -4,9 +4,20 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
 import axios from "axios";
+import { BASE_URL } from "../config";
 
   export default function TripList({ route }) {
-    const { origen, destino, fecha, cantidad, idaVuelta } = route.params;
+  const {
+    origen,
+    destino,
+    fecha,
+    cantidad,
+    idaVuelta,
+    fechaRegreso,
+    selectedSeatsIda,
+    tripIda,
+    fechaIda,
+  } = route.params;
 
     const navigation = useNavigation();
     const {login} = useContext(AuthContext);
@@ -26,34 +37,64 @@ import axios from "axios";
         });
     };
 
-    //funcion que crea la View con los datos de un usuario 
-    const renderItem = ({ item }) => {
-        return (
-        <TouchableOpacity
-          style={styles.itemBox}
-          onPress={() => navigation.navigate('SeatSelecionPage', 
-            { trip: item,
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        style={styles.itemBox}
+        onPress={() => {
+          //elegir viaje de ida para ida y vuelta
+          if (idaVuelta && !selectedSeatsIda) {
+            navigation.navigate('SeatSelecionPage', {
+              tripIda: item,
               origen: localidadOrigen,
               destino: localidadDestino,
-              fecha: fechaViaje,
+              fechaIda: fechaViaje,
               cantidad,
-              idaVuelta
-             })}
-        >
-            <View style={styles.contentWrapperStyle}>
-                <Text style={styles.txtNameStyle}>
-                    Hora Salida: {item.location.city}
-                </Text>
-                <Text style={styles.txtNameStyle}>
-                    Hora Llegada: {item.location.country}
-                </Text>
-                <Text style={styles.txtNameStyle}>
-                    Asientos Disponibles: {item.location.country}
-                </Text>
-            </View>
-        </TouchableOpacity>
-        );
-    };
+              idaVuelta,
+              fechaRegreso,
+            });
+          }
+          //elegir asientos vuelta
+          else if (idaVuelta && selectedSeatsIda) {
+            navigation.navigate('SeatSelecionPage', {
+              tripIda: tripIda,
+              tripVuelta: item,
+              origen: localidadOrigen,
+              destino: localidadDestino,
+              fechaIda,
+              cantidad,
+              idaVuelta,
+              fechaRegreso,
+              selectedSeatsIda,
+            });
+          }
+          //solo ida
+          else {
+            navigation.navigate('SeatSelecionPage', {
+              tripIda: item,
+              origen: localidadOrigen,
+              destino: localidadDestino,
+              fechaIda: fechaViaje,
+              cantidad,
+              idaVuelta,
+            });
+          }
+        }}
+      >
+        <View style={styles.contentWrapperStyle}>
+          <Text style={styles.txtNameStyle}>
+            Hora Salida: {item.location.city}
+          </Text>
+          <Text style={styles.txtNameStyle}>
+            Hora Llegada: {item.location.country}
+          </Text>
+          <Text style={styles.txtNameStyle}>
+            Asientos Disponibles: {item.location.country}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
     //funcion que muestra la rueda de carga mientras se buscan los datos
     const renderLoadingWheel = () => {

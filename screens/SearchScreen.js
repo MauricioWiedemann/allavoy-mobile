@@ -5,6 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from 'expo-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
+import { BASE_URL } from "../config";
 
 
 
@@ -21,12 +22,12 @@ import axios from 'axios';
       fechaRegreso: '',
     });
 
-    // Origen
+    // origen
     const [origenOpen, setOrigenOpen] = useState(false);
     const [origenItems, setOrigenItems] = useState([]);
     const [origenValue, setOrigenValue] = useState(null);
     const [loadingOrigen, setLoadingOrigen] = useState(false);
-    // Destino
+    // destino
     const [destinoOpen, setDestinoOpen] = useState(false);
     const [destinoItems, setDestinoItems] = useState([]);
     const [destinoValue, setDestinoValue] = useState(null);
@@ -37,7 +38,7 @@ import axios from 'axios';
     useEffect(() => {
         setLoadingOrigen(true);
         setLoadingDestino(true);
-        axios.get('https://tu-api.com/localidades')
+        axios.get(`${BASE_URL}/localidades`)
             .then(res => {
                 setOrigenItems(res.data.map(nombre => ({ value: nombre })));
                 setLoadingOrigen(false);
@@ -266,7 +267,6 @@ import axios from 'axios';
       fontWeight: '500',
       color: '#929292',
     },
-    /** Header */
     header: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -278,7 +278,6 @@ import axios from 'axios';
       alignSelf: 'center',
       marginBottom: 10,
     },
-    /** Form */
     form: {
       flexGrow: 1,
       flexShrink: 1,
@@ -301,7 +300,6 @@ import axios from 'axios';
       color: '#222',
       textAlign: 'center',
     },
-    /** Input */
     input: {
       marginBottom: 10,
     },
@@ -322,7 +320,6 @@ import axios from 'axios';
       borderColor: '#C9D3DB',
       borderStyle: 'solid',
     },
-    /** Button */
     btn: {
       flexDirection: 'row',
       alignItems: 'center',

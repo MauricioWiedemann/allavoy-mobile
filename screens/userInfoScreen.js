@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { SafeAreaView, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import { BASE_URL } from "../config";
 
 export default function UserInfo() {
   const { logout } = useContext(AuthContext);

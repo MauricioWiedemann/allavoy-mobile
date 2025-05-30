@@ -1,20 +1,32 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from "../config";
 
 import { AuthContext } from '../context/AuthContext';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 
 
 export function CartDetail({ route }) {
-  const { trip, selectedSeats, origen, destino, fecha, cantidad, idaVuelta } = route.params;
+  const {
+    tripIda,
+    tripVuelta,
+    selectedSeatsIda,
+    selectedSeats,
+    origen,
+    destino,
+    fechaIda,
+    fechaRegreso,
+    cantidad,
+    idaVuelta,
+  } = route.params;
   
   const navigation = useNavigation();
   const {login} = useContext(AuthContext);
 
   const handlePayment = async () => {
     try {
-      //const response = await axios.post('https://tu-api.com/comprarviaje', { trip });
+      //const response = await axios.post(`${BASE_URL}/comprarViaje`, { trip });
       //navigation.navigate('CompraExitosa');
       //mock, sacar luego de conectar a la api
       setTimeout(() => {
@@ -46,19 +58,22 @@ export function CartDetail({ route }) {
         </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-          {trip.fecha_salida} 12/7/2025 18:20hs
+          {tripIda?.fechaIda}{fechaIda} 18:20hs
           </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-          {trip.fecha_llegada} 12/7/2025 19:30hs
+          {tripIda?.fechaIda}{fechaIda} 19:30hs
           </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
-          {trip.omnibus} 409
+          {tripIda?.omnibus} 409
           </Text>        
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
-          {selectedSeats.join(', ')}
+          {(idaVuelta
+            ? (selectedSeatsIda? selectedSeatsIda.join(', ') : '-')
+            : (selectedSeats? selectedSeats.join(', ') : '-')
+          )}
         </Text>
 
         {idaVuelta && (
@@ -71,19 +86,19 @@ export function CartDetail({ route }) {
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-              {trip.fecha_salida} 12/7/2025 21:30hs
+              {fechaRegreso ? `${fechaRegreso} 21:30hs` : '-'}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-              {trip.fecha_llegada} 12/7/2025 22:20hs
+              {fechaRegreso ? `${fechaRegreso} 22:20hs` : '-'}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
-              {trip.omnibus} 708
+              {tripVuelta?.omnibus || '708'}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
-              {selectedSeats.join(', ')}
+              {selectedSeats && Array.isArray(selectedSeats) ? selectedSeats.join(', ') : '-'}
             </Text>
           </>
         )}
@@ -93,7 +108,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>SubTotal: </Text>
           </Text>
           <Text style={styles.txtDetail}>
-            ${trip.origen} 1500 
+            1500 
           </Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: '50%', marginTop: 0, marginBottom: 10 }}>
@@ -101,7 +116,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>Descuentos: </Text>
           </Text>
           <Text style={styles.txtDetail}>
-            ${trip.origen} 50 
+            50 
           </Text>
         </View>
         <View style={{ 

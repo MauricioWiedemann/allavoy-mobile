@@ -15,7 +15,7 @@ export const AuthProvider = ({children}) => {
         setIsLoading(true);
             console.log('userToken en AppNav:', userToken);
 
-        // MOCK para admin/admin
+        // mock admin/admin
         if (username === 'admin' && password === 'admin') {
             const mockUserInfo = {
                 data: {

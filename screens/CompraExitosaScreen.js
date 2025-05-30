@@ -5,9 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 export default function CompraExitosa() {
   const navigation = useNavigation();
 
-  // Función para mostrar mensaje de PDF no disponible
   const handleDescargarPDF = () => {
-    Alert.alert('No disponible aún', 'La descarga de PDF estará disponible próximamente.');
+    Alert.alert('TBD', 'La descarga de PDF no se encuentra disponible.');
   };
 
   return (
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
-    opacity: 0.4, // para indicar que es temporal
+    opacity: 0.4,
   },
   btn: {
     flexDirection: 'row',

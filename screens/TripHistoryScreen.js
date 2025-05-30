@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { BASE_URL } from "../config";
 
-// Simulación de viajes comprados previamente (puedes reemplazar por datos reales)
 const MOCK_TRIPS = [
   {
     id: '1',
@@ -19,7 +19,7 @@ const MOCK_TRIPS = [
     fecha_salida: '15/7/2025 09:00hs',
     fecha_llegada: '15/7/2025 10:10hs',
     omnibus: '410',
-    asientos: [5],
+    asientos: [5, 6],
   },
 ];
 
@@ -27,7 +27,6 @@ export default function TripHistory() {
   const [trips, setTrips] = useState([]);
 
   useEffect(() => {
-    //cargar del back
     setTrips(MOCK_TRIPS);
   }, []);
 
@@ -59,7 +58,7 @@ export default function TripHistory() {
           renderItem={renderTrip}
           contentContainerStyle={{ paddingBottom: 24 }}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No tienes viajes comprados aún.</Text>
+            <Text style={styles.emptyText}>No tienes viajes comprados.</Text>
           }
         />
       </View>

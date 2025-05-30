@@ -11,6 +11,7 @@ import { AuthContext } from '../context/AuthContext';
       email: '',
       password: '',
     });
+
     //Ver si el teclado esta abierto o no
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
     useEffect(() => {
@@ -112,7 +113,6 @@ import { AuthContext } from '../context/AuthContext';
       fontWeight: '500',
       color: '#929292',
     },
-    /** Header */
     header: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -124,7 +124,6 @@ import { AuthContext } from '../context/AuthContext';
       alignSelf: 'center',
       marginBottom: 10,
     },
-    /** Form */
     form: {
       flexGrow: 1,
       flexShrink: 1,
@@ -148,7 +147,6 @@ import { AuthContext } from '../context/AuthContext';
       textAlign: 'center',
       letterSpacing: 0.15,
     },
-    /** Input */
     input: {
       marginBottom: 10,
     },
@@ -170,7 +168,6 @@ import { AuthContext } from '../context/AuthContext';
       borderColor: '#C9D3DB',
       borderStyle: 'solid',
     },
-    /** Button */
     btn: {
       flexDirection: 'row',
       alignItems: 'center',

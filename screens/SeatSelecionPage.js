@@ -1,15 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
+import { BASE_URL } from "../config";
 import { AuthContext } from '../context/AuthContext';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 
 
 export function SeatSelecionPage({ route }) {
-  const { trip, origen, destino, fecha, cantidad, idaVuelta, fechaRegreso } = route.params;
+  const { tripIda, 
+          origen, 
+          destino, 
+          fechaIda, 
+          cantidad, 
+          idaVuelta, 
+          fechaRegreso,
+          tripVuelta,
+          selectedSeatsIda } = route.params;
 
   const navigation = useNavigation();
-  const { login } = useContext(AuthContext);
 
   const [seatMap, setSeatMap] = useState([
     { fila: 1, asientos: [1, 2, 3, 4] },
@@ -27,7 +35,7 @@ export function SeatSelecionPage({ route }) {
 
   /*
   useEffect(() => {
-    axios.get('https://tu-api.com/asientos?tripId=' + trip.id)
+    axios.get(`${BASE_URL}/asientos?tripId=` + trip.id)
       .then(res => setSeatMap(res.data))
       .catch(() => setSeatMap([]));
   }, [trip]);
@@ -39,6 +47,52 @@ export function SeatSelecionPage({ route }) {
       if (selectedSeats.length < cantidad) {
         setSelectedSeats(prev => [...prev, seatNumber]);
       }
+    }
+  };
+
+  const handleConfirm = () => {
+    if (idaVuelta) {
+      // ida
+      if (!selectedSeatsIda && !tripVuelta) {
+        navigation.navigate('TripListScreen', {
+          origen: destino,
+          destino: origen,
+          fecha: fechaRegreso,
+          cantidad,
+          idaVuelta,
+          selectedSeatsIda: selectedSeats, 
+          tripIda,
+          fechaIda,
+          fechaRegreso, 
+        });
+      }
+      // vuelta
+      else if (selectedSeatsIda && tripVuelta) {
+        navigation.navigate('CartDetail', {
+          selectedSeats: selectedSeats,
+          selectedSeatsIda,  
+          tripVuelta,  
+          tripIda,  
+          origen,
+          destino,
+          fechaIda,
+          fechaRegreso,
+          cantidad,
+          idaVuelta,
+        });
+      }
+    } else {
+      // solo ida
+      navigation.navigate('CartDetail', {
+        selectedSeats,
+        trip: tripIda,
+        origen,
+        destino,
+        fecha: fechaIda,
+        cantidad,
+        idaVuelta,
+        fechaRegreso,
+      });
     }
   };
 
@@ -102,15 +156,7 @@ export function SeatSelecionPage({ route }) {
         <View style={styles.formAction}>
             <TouchableOpacity 
               disabled={selectedSeats.length !== cantidad}
-              onPress={() => navigation.navigate('CartDetail', 
-              { selectedSeats, 
-                trip, 
-                origen, 
-                destino, 
-                fecha, 
-                cantidad, 
-                idaVuelta
-              })}>
+              onPress={() => handleConfirm()}>
               <View style={styles.btn}>
                   <Text style={styles.btnText}>Confirmar asientos</Text>
               </View>
