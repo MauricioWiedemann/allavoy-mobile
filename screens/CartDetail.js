@@ -23,6 +23,8 @@ export function CartDetail({ route }) {
   
   const navigation = useNavigation();
   const {login} = useContext(AuthContext);
+  const origenOk = idaVuelta ? destino : origen;
+  const destinoOk = idaVuelta ? origen : destino;
 
   const handlePayment = async () => {
     try {
@@ -52,9 +54,9 @@ export function CartDetail({ route }) {
         <Text style={styles.title}>Detalle de Compra</Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-          {origen}
+          {origenOk}
           <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
-          {destino} 
+          {destinoOk} 
         </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Salida: </Text>
@@ -80,9 +82,9 @@ export function CartDetail({ route }) {
           <>
             <Text style={[styles.txtDetail, { marginTop: 20 }]}>
               <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-              {destino}
+              {destinoOk}
               <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
-              {origen}
+              {origenOk}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Salida: </Text>

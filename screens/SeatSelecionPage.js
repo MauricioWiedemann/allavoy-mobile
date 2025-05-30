@@ -88,7 +88,7 @@ export function SeatSelecionPage({ route }) {
         trip: tripIda,
         origen,
         destino,
-        fecha: fechaIda,
+        fechaIda,
         cantidad,
         idaVuelta,
         fechaRegreso,

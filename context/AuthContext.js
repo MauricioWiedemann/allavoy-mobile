@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {createContext, useState, useEffect} from "react";
+import {createContext, useState, useEffect} from "react";
 import axios from 'axios';
 import { BASE_URL } from "../config";
 
@@ -37,15 +37,13 @@ export const AuthProvider = ({children}) => {
             pass: password,
         })
         .then(res => {
-            if (res.data.token!=""){ //temporal para no hacer el login si las credenciales no son correctas
+            if (res.data.token!=""){
                 let userInfo = res;
                 setUserInfo(userInfo);
                 setUserToken(userInfo.data.token)
 
                 AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
                 AsyncStorage.setItem('userToken', userInfo.data.token);
-
-                //console.log(userInfo);
                 console.log('User Token: ' + userInfo.data.token);
             } else {
                 console.log("Credenciales incorrectas");
