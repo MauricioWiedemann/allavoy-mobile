@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Users from '../screens/UserScreen';
 import SearchBus from '../screens/SearchScreen';
 import TripList from '../screens/TripListScreen';
 import SeatSelecionPage from '../screens/SeatSelecionPage';
@@ -49,7 +48,6 @@ export default function AppStack() {
   return (
     <Stack.Navigator initialRouteName="AppTabs" screenOptions={{ headerShown: false }}>
       {/*pantallas sin tabs*/}
-      <Stack.Screen name="userScreen" component={Users} />
       <Stack.Screen name="searchScreen" component={SearchBus} />
       <Stack.Screen name="TripListScreen" component={TripList} />
       <Stack.Screen name="CartDetail" component={CartDetail} />

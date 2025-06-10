@@ -1,70 +1,131 @@
 import { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { BASE_URL } from "../config";
+import {FlatList, ActivityIndicator, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import axios from "axios";
 
-const MOCK_TRIPS = [
-  {
-    id: '1',
-    origen: 'Montevideo',
-    destino: 'Canelones',
-    fecha_salida: '12/7/2025 18:20hs',
-    fecha_llegada: '12/7/2025 19:30hs',
-    omnibus: '409',
-    asientos: [12, 13],
-  },
-  {
-    id: '2',
-    origen: 'Canelones',
-    destino: 'Montevideo',
-    fecha_salida: '15/7/2025 09:00hs',
-    fecha_llegada: '15/7/2025 10:10hs',
-    omnibus: '410',
-    asientos: [5, 6],
-  },
-];
+
 
 export default function TripHistory() {
-  const [trips, setTrips] = useState([]);
+  const [data, setData] = useState([]);
+  const [page, setPages] = useState(1);
 
-  useEffect(() => {
-    setTrips(MOCK_TRIPS);
-  }, []);
 
-  const renderTrip = ({ item }) => (
-    <View style={styles.tripCard}>
-      <Text style={styles.tripTitle}>{item.origen} → {item.destino}</Text>
-      <Text style={styles.tripDetail}>Salida: {item.fecha_salida}</Text>
-      <Text style={styles.tripDetail}>Llegada: {item.fecha_llegada}</Text>
-      <Text style={styles.tripDetail}>Ómnibus: {item.omnibus}</Text>
-      <Text style={styles.tripDetail}>Asientos: {item.asientos.join(', ')}</Text>
+//funcion para obtener los usuarios de la api
+    const getdata = () => {
+        axios
+        .get("https://randomuser.me/api/?page=${page}&results=15")
+        .then((res) => {
+            setData([...data, ...res.data.results]);
+        });
+    };
+
+const renderItem = ({ item: h }) => {
+  return (
+    <View style={styles.itemBox}>
+      <View style={styles.contentWrapperStyle}>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Origen: </Text>
+          {h.origen?.nombre}, {h.origen?.departamento}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Destino: </Text>
+          {h.destino?.nombre}, {h.destino?.departamento}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Salida: </Text>
+          {h.fechaSalida}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Llegada: </Text>
+          {h.fechaLlegada}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Asiento: </Text>
+          {h.asiento}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Precio: </Text>
+          {h.precio}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Descuento: </Text>
+          {h.descuento} %
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Monto pagado: </Text>
+          {h.monto}
+        </Text>
+        <Text style={styles.tripDetail}>
+          <Text style={{ fontWeight: 'bold' }}>Devuelto: </Text>
+          {h.devuelto ? 'Si' : 'No'}
+        </Text>
+        {h.devuelto && h.fechaDevolucion && (
+          <Text style={styles.tripDetail}>
+            <Text style={{ fontWeight: 'bold' }}>Fecha devolucion: </Text>
+            {h.fechaDevolucion}
+          </Text>
+        )}
+      </View>
     </View>
   );
+};
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            alt="App Logo"
-            resizeMode="contain"
-            style={styles.headerImg}
-            source={require('./../assets/logo.png')}
-          />
-          <Text style={styles.title}>Historial de Viajes</Text>
+    //funcion que muestra la rueda de carga mientras se buscan los datos
+    const renderLoadingWheel = () => {
+        return (
+        <View style={styles.loaderStyle}>
+            <ActivityIndicator size="large" />
         </View>
-        <FlatList
-          data={trips}
-          keyExtractor={item => item.id}
-          renderItem={renderTrip}
-          contentContainerStyle={{ paddingBottom: 24 }}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No tienes viajes comprados.</Text>
-          }
-        />
-      </View>
-    </SafeAreaView>
-  );
-}
+        );
+    };
+
+    //funacion que carga un nuevo item
+    const loadMoreItem = () => {
+        setPages(page + 1);
+    };
+
+    //llamar a la funcion getdata() cada vez que cambia page
+    useEffect(() => {
+        getdata();
+    }, [page]);
+
+    //Ver si el teclado esta abierto o no
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+    useEffect(() => {
+      const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+          setIsKeyboardOpen(true)
+      );
+      const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+          setIsKeyboardOpen(false)
+      );
+    })
+
+
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Image
+              alt="App Logo"
+              resizeMode="contain"
+              style={styles.headerImg}
+              source={require('./../assets/logo.png')}/>
+          </View>
+          <Text style={styles.title}>Historial de Viajes</Text>
+          <View style={styles.form}>
+                <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.login.uuid}
+                onEndReached={loadMoreItem}
+                onEndReachedThreshold={0}
+                ListFooterComponent={renderLoadingWheel}
+                />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
 const styles = StyleSheet.create({
   container: {
@@ -73,46 +134,47 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 16,
+    justifyContent: 'center',
     marginVertical: 30,
   },
   headerImg: {
     width: 150,
     height: 80,
-    marginBottom: 10,
+    alignSelf: 'center',
+    marginBottom: 0,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#075eec',
-    marginBottom: 8,
+    fontSize: 35,
+    fontWeight: '700',
+    color: '#1D2A32',
+    marginBottom: 0,
     textAlign: 'center',
   },
-  tripCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 18,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  tripTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#075eec',
-    marginBottom: 4,
+  form: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
   tripDetail: {
     fontSize: 15,
+    fontWeight: '600',
     color: '#222',
     marginBottom: 2,
   },
-  emptyText: {
-    textAlign: 'center',
-    color: '#888',
-    marginTop: 40,
-    fontSize: 16,
+  itemBox: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 0,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  contentWrapperStyle: {
+    flex: 1,
   },
 });
