@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {createContext, useState, useEffect} from "react";
 import axios from 'axios';
 import { BASE_URL } from "../config";
-import jwt_decode from "jwt-decode"; // Asegúrate de instalar jwt-decode
+import jwt_decode from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -38,7 +38,6 @@ export const AuthProvider = ({children}) => {
             if (res.data.token) {
                 const token = res.data.token;
                 const decoded = jwt_decode(token);
-                // Suponiendo que el token tiene campos: id, mail, nombre
                 const userInfo = {
                     id: decoded.id,
                     email: decoded.mail,
