@@ -1,26 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { BASE_URL } from "../config";
-import {FlatList, ActivityIndicator, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import { FlatList, StyleSheet, SafeAreaView, View, Image, Text } from 'react-native';
 import axios from "axios";
 
-
+import { AuthContext } from '../context/AuthContext';
 
 export default function TripHistory() {
   const [data, setData] = useState([]);
-  const [page, setPages] = useState(1);
+  const { login } = useContext(AuthContext);
 
+  //api viajes
+  const history = () => {
+    axios
+      .post(`${BASE_URL}/pasajes/historicocompra`, {
+        email: login.email
+      })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch(() => setData([]));
+  };
 
-//funcion para obtener los usuarios de la api
-    const getdata = () => {
-        axios
-        .get("https://randomuser.me/api/?page=${page}&results=15")
-        .then((res) => {
-            setData([...data, ...res.data.results]);
-        });
-    };
+  useEffect(() => {
+    history();
+  }, []);
 
-const renderItem = ({ item: h }) => {
-  return (
+  const renderItem = ({ item: h }) => (
     <View style={styles.itemBox}>
       <View style={styles.contentWrapperStyle}>
         <Text style={styles.tripDetail}>
@@ -68,64 +73,30 @@ const renderItem = ({ item: h }) => {
       </View>
     </View>
   );
-};
 
-    //funcion que muestra la rueda de carga mientras se buscan los datos
-    const renderLoadingWheel = () => {
-        return (
-        <View style={styles.loaderStyle}>
-            <ActivityIndicator size="large" />
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            alt="App Logo"
+            resizeMode="contain"
+            style={styles.headerImg}
+            source={require('./../assets/logo.png')}
+          />
         </View>
-        );
-    };
-
-    //funacion que carga un nuevo item
-    const loadMoreItem = () => {
-        setPages(page + 1);
-    };
-
-    //llamar a la funcion getdata() cada vez que cambia page
-    useEffect(() => {
-        getdata();
-    }, [page]);
-
-    //Ver si el teclado esta abierto o no
-    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-    useEffect(() => {
-      const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
-          setIsKeyboardOpen(true)
-      );
-      const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
-          setIsKeyboardOpen(false)
-      );
-    })
-
-
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Image
-              alt="App Logo"
-              resizeMode="contain"
-              style={styles.headerImg}
-              source={require('./../assets/logo.png')}/>
-          </View>
-          <Text style={styles.title}>Historial de Viajes</Text>
-          <View style={styles.form}>
-                <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.login.uuid}
-                onEndReached={loadMoreItem}
-                onEndReachedThreshold={0}
-                ListFooterComponent={renderLoadingWheel}
-                />
-          </View>
+        <Text style={styles.title}>Historial de Viajes</Text>
+        <View style={styles.form}>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(_, idx) => idx.toString()}
+          />
         </View>
-      </SafeAreaView>
-    );
-  }
+      </View>
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

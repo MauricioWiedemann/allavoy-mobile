@@ -15,7 +15,8 @@ import { BASE_URL } from "../config";
     idaVuelta,
     fechaRegreso,
     selectedSeatsIda,
-    tripIda,
+    precio,
+    idViajeIda,
     fechaIda,
   } = route.params;
 
@@ -28,37 +29,55 @@ import { BASE_URL } from "../config";
     const localidadOrigen = origen;
     const localidadDestino = destino;
 
-    //funcion para obtener los usuarios de la api
+    //api viajes
     const getdata = () => {
-        axios
-        .get("https://randomuser.me/api/?page=${page}&results=15")
+      axios
+        .post(`${BASE_URL}/viaje/buscar`, {
+          origen: localidadOrigen,
+          destino: localidadDestino,
+          fecha: fechaViaje,
+          cantidad: cantidad,
+        })
         .then((res) => {
-            setData([...data, ...res.data.results]);
-        });
+          setData(res.data);
+        })
+        .catch(() => setData([]));
     };
 
   const renderItem = ({ item }) => {
+
+    const horaSalida = item.fechaSalida ? item.fechaSalida.split('T')[1]?.substring(0, 5) : '';
+    const horaLlegada = item.fechaLlegada ? item.fechaLlegada.split('T')[1]?.substring(0, 5) : '';
+    const asientosDisponibles = item.cantidad - item.cantidadOcupados;
+
     return (
       <TouchableOpacity
         style={styles.itemBox}
         onPress={() => {
-          //elegir viaje de ida para ida y vuelta
+          let precio;
+          // elegir viaje de ida cuando idaVuelta es true
           if (idaVuelta && !selectedSeatsIda) {
+            precio = cantidad * item.precio;
             navigation.navigate('SeatSelecionPage', {
-              tripIda: item,
+              idViajeIda: item.idViaje,
+              asientosOcupados: item.asientosOcupados,
               origen: localidadOrigen,
               destino: localidadDestino,
               fechaIda: fechaViaje,
               cantidad,
               idaVuelta,
               fechaRegreso,
+              precio,
+              capacidadOmnibus: item.cantidad
             });
           }
           //elegir asientos vuelta
           else if (idaVuelta && selectedSeatsIda) {
+            precio = precio + (cantidad * item.precio);
             navigation.navigate('SeatSelecionPage', {
-              tripIda: tripIda,
-              tripVuelta: item,
+              idViajeIda: idViajeIda,
+              idViajeVuelta: item.idViaje,
+              asientosOcupados: item.asientosOcupados,
               origen: localidadOrigen,
               destino: localidadDestino,
               fechaIda,
@@ -66,30 +85,39 @@ import { BASE_URL } from "../config";
               idaVuelta,
               fechaRegreso,
               selectedSeatsIda,
+              precio,
+              capacidadOmnibus: item.cantidad
             });
           }
           //solo ida
           else {
+            precio = cantidad * item.precio;
             navigation.navigate('SeatSelecionPage', {
-              tripIda: item,
+              idViajeIda: item.idViaje,
+              asientosOcupados: item.asientosOcupados,
               origen: localidadOrigen,
               destino: localidadDestino,
               fechaIda: fechaViaje,
               cantidad,
               idaVuelta,
+              precio,
+              capacidadOmnibus: item.cantidad
             });
           }
         }}
       >
         <View style={styles.contentWrapperStyle}>
           <Text style={styles.txtNameStyle}>
-            Hora Salida: {item.location.city}
+            Hora Salida: {horaSalida}
           </Text>
           <Text style={styles.txtNameStyle}>
-            Hora Llegada: {item.location.country}
+            Hora Llegada: {horaLlegada}
           </Text>
           <Text style={styles.txtNameStyle}>
-            Asientos Disponibles: {item.location.country}
+            Asientos Disponibles: {asientosDisponibles}
+          </Text>
+          <Text style={styles.txtNameStyle}>
+            Precio por pasaje: ${item.precio}
           </Text>
         </View>
       </TouchableOpacity>

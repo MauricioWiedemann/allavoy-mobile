@@ -12,8 +12,8 @@ export function ForgotPass() {
 
   const handleForgotPass = async () => {
     try {
-      await axios.post(`${BASE_URL}/forgotPass`, { email: form.email });
-      alert('Se ha enviado un mail de recuperación.');
+      await axios.post(`${BASE_URL}/auth/recuperar-password`, { correo: form.email });
+      alert(res.data.message);
       navigation.navigate('Loguearse');
     } catch (error) {
       alert('Error al enviar el mail de recuperación.');

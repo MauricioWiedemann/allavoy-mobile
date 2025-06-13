@@ -18,31 +18,31 @@ export function SignUp() {
     password: '',
   });
 
-/*
   const crearCuenta = async (form) => {
     try {
-      const response = await axios.post(`${BASE_URL}/registro`, {
-        email: form.email,
+      const response = await axios.post(`${BASE_URL}/usuario/alta`, {
+        cedula: form.cedula,
         nombre: form.nombre,
         apellido: form.apellido,
-        cedula: form.cedula,
-        fechaNac: form.fechaNac,
+        email: form.email,
         password: form.password,
+        fechaNacimiento: form.fechaNac,
+        tipoDescuento: 'NA',
+        tipoUsuario: 'CLIENTE',
       });
-      return response.data;
+      //return response.data;
+      if (response.status === 200) {
+      Alert.alert(
+        'Cuenta creada exitosamente',
+        'Ingrese sus datos en la pantalla de Login para acceder',
+        [{ text: 'OK', onPress: () => navigation.navigate('Loguearse') }]
+      );
+      } else {
+        Alert.alert('Error', 'Error, intente nuevamente');
+      }
     } catch (error) {
       throw error;
     }
-  };
-  */
-
-  // mock, borrar
-  const crearCuenta = async (form) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ ok: true, message: 'Usuario creado' });
-      }, 1000);
-    });
   };
 
   //Ver si el teclado esta abierto o no
@@ -55,6 +55,7 @@ export function SignUp() {
             setIsKeyboardOpen(false)
         );
       })
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
       <View style={styles.container}>

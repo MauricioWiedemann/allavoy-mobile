@@ -1,24 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from "../config";
 
 import { AuthContext } from '../context/AuthContext';
-import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
 
 export function CartDetail({ route }) {
   const {
-    tripIda,
-    tripVuelta,
+    idViajeIda,
+    idViajeVuelta,
     selectedSeatsIda,
     selectedSeats,
     origen,
     destino,
     fechaIda,
     fechaRegreso,
-    cantidad,
     idaVuelta,
+    precio
   } = route.params;
   
   const navigation = useNavigation();
@@ -26,17 +25,77 @@ export function CartDetail({ route }) {
   const origenOk = idaVuelta ? destino : origen;
   const destinoOk = idaVuelta ? origen : destino;
 
+  // Estados para hora salida/llegada de ida y vuelta
+  const [horaSalidaIda, setHoraSalidaIda] = useState('');
+  const [horaLlegadaIda, setHoraLlegadaIda] = useState('');
+  const [horaSalidaVuelta, setHoraSalidaVuelta] = useState('');
+  const [horaLlegadaVuelta, setHoraLlegadaVuelta] = useState('');
+
+  //hora salida/llegada para ida
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/viaje/${idViajeIda}`)
+      .then((res) => {
+        const viaje = res.data;
+        setHoraSalidaIda(viaje.fechaSalida ? viaje.fechaSalida.split('T')[1]?.substring(0, 5) : '');
+        setHoraLlegadaIda(viaje.fechaLlegada ? viaje.fechaLlegada.split('T')[1]?.substring(0, 5) : '');
+      })
+      .catch(() => {
+        setHoraSalidaIda('');
+        setHoraLlegadaIda('');
+      });
+  }, [idViajeIda]);
+
+  //hora salida/llegada para vuelta
+  useEffect(() => {
+    if (!idaVuelta || !idViajeVuelta) return;
+    axios
+      .get(`${BASE_URL}/viaje/${idViajeVuelta}`)
+      .then((res) => {
+        const viaje = res.data;
+        setHoraSalidaVuelta(viaje.fechaSalida ? viaje.fechaSalida.split('T')[1]?.substring(0, 5) : '');
+        setHoraLlegadaVuelta(viaje.fechaLlegada ? viaje.fechaLlegada.split('T')[1]?.substring(0, 5) : '');
+      })
+      .catch(() => {
+        setHoraSalidaVuelta('');
+        setHoraLlegadaVuelta('');
+      });
+  }, [idaVuelta, idViajeVuelta]);
+
   const handlePayment = async () => {
     try {
-      //const response = await axios.post(`${BASE_URL}/comprarViaje`, { trip });
-      //navigation.navigate('CompraExitosa');
-      //mock, sacar luego de conectar a la api
-      setTimeout(() => {
-        navigation.navigate('CompraExitosaScreen');
-      }, 1000);
+      // compra asientos ida
+      if (selectedSeatsIda && Array.isArray(selectedSeatsIda)) {
+        for (const asiento of selectedSeatsIda) {
+          await axios.post(`${BASE_URL}/confirmar-compra`, { 
+            numeroAsiento: asiento, 
+            idUsuario: login.id, 
+            idViaje: idViajeIda, 
+            emailComprador: login.email, 
+            idPago: "ejemplo12345"
+          });
+        }
+      }
+
+      //compra asientos vuelta
+      if (idaVuelta && selectedSeats && Array.isArray(selectedSeats)) {
+        for (const asiento of selectedSeats) {
+          await axios.post(`${BASE_URL}/confirmar-compra`, { 
+            numeroAsiento: asiento, 
+            idUsuario: login.id, 
+            idViaje: idViajeVuelta, 
+            emailComprador: login.email, 
+            idPago: "ejemplo12345"
+          });
+        }
+      }
+
+      alert('Exito, compra realizada correctamente');
+      navigation.navigate('CompraExitosaScreen');
     } catch (error) {
-      Alert.alert('Error', 'No se pudo completar la compra.');
-      navigation.navigate('SearchScreen');
+      Alert.alert('Error', 'No se pudo realizar la compra.');
+      //volvemos a la pantalla de inicio?
+      //navigation.navigate('SearchScreen');
     }
   };
 
@@ -60,11 +119,11 @@ export function CartDetail({ route }) {
         </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-          {tripIda?.fechaIda}{fechaIda} 18:20hs
-          </Text>
+          {fechaIda} {horaSalidaIda && `${horaSalidaIda}hs`}
+        </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-          {tripIda?.fechaIda}{fechaIda} 19:30hs
+          {fechaIda} {horaLlegadaIda && `${horaLlegadaIda}hs`}
           </Text>
         <Text style={styles.txtDetail}>
           <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
@@ -88,11 +147,11 @@ export function CartDetail({ route }) {
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-              {fechaRegreso ? `${fechaRegreso} 21:30hs` : '-'}
+              {fechaRegreso} {horaSalidaVuelta && `${horaSalidaVuelta}hs`}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-              {fechaRegreso ? `${fechaRegreso} 22:20hs` : '-'}
+              {fechaRegreso} {horaLlegadaVuelta && `${horaLlegadaVuelta}hs`}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
@@ -110,7 +169,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>SubTotal: </Text>
           </Text>
           <Text style={styles.txtDetail}>
-            1500 
+            ${precio}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: '50%', marginTop: 0, marginBottom: 10 }}>
@@ -118,7 +177,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>Descuentos: </Text>
           </Text>
           <Text style={styles.txtDetail}>
-            50 
+            $50 
           </Text>
         </View>
         <View style={{ 
@@ -137,7 +196,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>Total:</Text>
           </Text>
           <Text style={styles.txtDetail}>
-            $1450
+            ${precio-50}
           </Text>
         </View>
 

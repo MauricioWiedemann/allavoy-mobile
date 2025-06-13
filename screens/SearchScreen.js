@@ -38,7 +38,7 @@ import { BASE_URL } from "../config";
     useEffect(() => {
         setLoadingOrigen(true);
         setLoadingDestino(true);
-        axios.get(`${BASE_URL}/localidades`)
+        axios.get(`${BASE_URL}/localidad/obtener`)
             .then(res => {
                 setOrigenItems(res.data.map(nombre => ({ value: nombre })));
                 setLoadingOrigen(false);
@@ -47,7 +47,7 @@ import { BASE_URL } from "../config";
             })
             .catch(() => setLoadingOrigen(false) && setLoadingDestino(false));
     }, []);
-    
+    /*
     // datos para pruebas, borrar cuando se tenga la api
     useEffect(() => {
       const localidades = [
@@ -60,7 +60,7 @@ import { BASE_URL } from "../config";
       setOrigenItems(localidades);
       setDestinoItems(localidades);
     }, []);
-
+*/
     const handleBuscar = () => {
       navigation.navigate('TripListScreen', {
         origen: form.origen,

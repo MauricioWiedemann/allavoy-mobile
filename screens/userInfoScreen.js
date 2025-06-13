@@ -6,7 +6,7 @@ import { BASE_URL } from "../config";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function UserInfo() {
-  const { logout } = useContext(AuthContext);
+  const { logout, login } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [original, setOriginal] = useState({});
   const [form, setForm] = useState({
@@ -18,40 +18,44 @@ export default function UserInfo() {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    // mock
-    /*
-    axios.get(`${BASE_URL}/userInfo`)
+    axios.post(`${BASE_URL}/usuario/buscarporid`, {
+      idUsuario: login.id?.toString()
+    })
       .then(res => {
-        setForm(res.data);
-        setOriginal(res.data);
+        const data = res.data;
+        setForm({
+          email: data.correo,
+          nombre: data.nombre,
+          apellido: data.apellido,
+          fechaNacimiento: data.fechaNacimiento,
+        });
+        setOriginal({
+          email: data.correo,
+          nombre: data.nombre,
+          apellido: data.apellido,
+          fechaNacimiento: data.fechaNacimiento,
+        });
       })
       .catch(() => Alert.alert('Error', 'Error en carga de datos'))
       .finally(() => setLoading(false));
-    */
-    setTimeout(() => {
-      const mockData = {
-        email: 'usuario@correo.com',
-        nombre: 'Juan',
-        apellido: 'Pérez',
-        fechaNacimiento: '01-01-1995',
-      };
-      setForm(mockData);
-      setOriginal(mockData);
-      setLoading(false);
-    }, 1000);
   }, []);
 
   const handleChange = (field, value) => setForm({ ...form, [field]: value });
 
   const handleSave = async () => {
     try {
-      await axios.post(`${BASE_URL}/userInfo`, {
+      const res = await axios.post(`${BASE_URL}/usuario/editar`, {
+        idUsuario: login.id?.toString(),
         nombre: form.nombre,
         apellido: form.apellido,
         fechaNacimiento: form.fechaNacimiento,
       });
-      setOriginal(form);
-      Alert.alert('Éxito', 'Datos guardados');
+      if (res.status === 200) {
+        setOriginal(form);
+        Alert.alert('Éxito', 'Datos guardados');
+      } else {
+        Alert.alert('Error', 'No se pudo guardar');
+      }
     } catch {
       Alert.alert('Error', 'No se pudo guardar');
     }
@@ -59,7 +63,6 @@ export default function UserInfo() {
 
   const handleCancel = () => setForm(original);
 
-  // Igual que en SignUpScreen: guardar la fecha ya formateada en el estado
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {

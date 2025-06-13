@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {createContext, useState, useEffect} from "react";
 import axios from 'axios';
 import { BASE_URL } from "../config";
+import jwt_decode from "jwt-decode"; // Asegúrate de instalar jwt-decode
 
 export const AuthContext = createContext();
 
@@ -13,15 +14,12 @@ export const AuthProvider = ({children}) => {
 
     const login = (username, password) => {
         setIsLoading(true);
-            console.log('userToken en AppNav:', userToken);
-
         // mock admin/admin
         if (username === 'admin' && password === 'admin') {
             const mockUserInfo = {
-                data: {
-                    token: 'mock-token-admin',
-                    user: { name: 'Administrador', mail: 'admin' }
-                }
+                id: '1',
+                mail: 'admin',
+                nombre: 'Administrador'
             };
             setUserInfo(mockUserInfo);
             setUserToken('mock-token-admin');
@@ -32,21 +30,24 @@ export const AuthProvider = ({children}) => {
         }
 
 
-        axios.post(`${BASE_URL}/login`, {
-            mail: username,
-            pass: password,
+        axios.post(`${BASE_URL}/auth/login`, {
+            email: username,
+            password: password,
         })
         .then(res => {
-            if (res.data.token!=""){
-                let userInfo = res;
+            if (res.data.token) {
+                const token = res.data.token;
+                const decoded = jwt_decode(token);
+                // Suponiendo que el token tiene campos: id, mail, nombre
+                const userInfo = {
+                    id: decoded.id,
+                    email: decoded.mail,
+                    nombre: decoded.nombre
+                };
                 setUserInfo(userInfo);
-                setUserToken(userInfo.data.token)
-
+                setUserToken(token);
                 AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-                AsyncStorage.setItem('userToken', userInfo.data.token);
-                console.log('User Token: ' + userInfo.data.token);
-            } else {
-                console.log("Credenciales incorrectas");
+                AsyncStorage.setItem('userToken', token);
             }
         })
         .catch(e => {

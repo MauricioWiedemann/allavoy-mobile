@@ -7,15 +7,18 @@ import { NavigationContainer, createStaticNavigation, useNavigation } from '@rea
 
 
 export function SeatSelecionPage({ route }) {
-  const { tripIda, 
+  const { idViajeIda, 
           origen, 
           destino, 
           fechaIda, 
-          cantidad, 
+          cantidad,
+          asientosOcupados,
+          precio, 
           idaVuelta, 
           fechaRegreso,
-          tripVuelta,
-          selectedSeatsIda } = route.params;
+          idViajeVuelta,
+          selectedSeatsIda,
+          capacidadOmnibus } = route.params;
 
   const navigation = useNavigation();
 
@@ -33,14 +36,8 @@ export function SeatSelecionPage({ route }) {
 ]);
   const [selectedSeats, setSelectedSeats] = useState([]);
 
-  /*
-  useEffect(() => {
-    axios.get(`${BASE_URL}/asientos?tripId=` + trip.id)
-      .then(res => setSeatMap(res.data))
-      .catch(() => setSeatMap([]));
-  }, [trip]);
-    */
   const toggleSeat = (seatNumber) => {
+    if (asientosOcupados && asientosOcupados.includes(seatNumber)) return;
     if (selectedSeats.includes(seatNumber)) {
       setSelectedSeats(prev => prev.filter(n => n !== seatNumber));
     } else {
@@ -61,9 +58,10 @@ export function SeatSelecionPage({ route }) {
           cantidad,
           idaVuelta,
           selectedSeatsIda: selectedSeats, 
-          tripIda,
+          idViajeIda,
           fechaIda,
-          fechaRegreso, 
+          fechaRegreso,
+          precio
         });
       }
       // vuelta
@@ -71,27 +69,29 @@ export function SeatSelecionPage({ route }) {
         navigation.navigate('CartDetail', {
           selectedSeats: selectedSeats,
           selectedSeatsIda,  
-          tripVuelta,  
-          tripIda,  
+          idViajeVuelta,  
+          idViajeIda,  
           origen,
           destino,
           fechaIda,
           fechaRegreso,
           cantidad,
           idaVuelta,
+          precio
         });
       }
     } else {
       // solo ida
       navigation.navigate('CartDetail', {
         selectedSeats,
-        trip: tripIda,
+        idViajeIda,
         origen,
         destino,
         fechaIda,
         cantidad,
         idaVuelta,
         fechaRegreso,
+        precio
       });
     }
   };
@@ -116,19 +116,29 @@ export function SeatSelecionPage({ route }) {
             padding: 10}}>
           {seatMap.map((fila, i) => (
             <View key={i} style={styles.seatRow}>
-              {fila.asientos.map((num, i) => (
-                <View key={num} style={i === 2 ? { marginLeft: 20 } : null}>
-                  <TouchableOpacity
-                    style={[
-                      styles.seat,
-                      selectedSeats.includes(num) && styles.seatSelected
-                    ]}
-                    onPress={() => toggleSeat(num)}
-                  >
-                    <Text style={styles.seatText}>{num}</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
+              {fila.asientos.map((num, j) => {
+                if (num > capacidadOmnibus) {
+                  return (
+                    <View key={num} style={[styles.seat, { backgroundColor: 'transparent', elevation: 0 }]} />
+                  );
+                }
+                const ocupado = asientosOcupados && asientosOcupados.includes(num);
+                return (
+                  <View key={num} style={j === 2 ? { marginLeft: 20 } : null}>
+                    <TouchableOpacity
+                      style={[
+                        styles.seat,
+                        ocupado && styles.seatReserved,
+                        selectedSeats.includes(num) && styles.seatSelected
+                      ]}
+                      onPress={() => toggleSeat(num)}
+                      disabled={ocupado}
+                    >
+                      <Text style={styles.seatText}>{num}</Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
             </View>
           ))}
         </View>
@@ -208,6 +218,9 @@ const styles = StyleSheet.create({
   },
   seatSelected: {
     backgroundColor: '#6dc276',
+  },
+  seatReserved: {
+    backgroundColor: '#b0b0b0',
   },
   seatText: {
     color: '#222',
