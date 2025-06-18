@@ -18,30 +18,65 @@ export function SignUp() {
     password: '',
   });
 
-  const crearCuenta = async (form) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/usuario/alta`, {
-        cedula: form.cedula,
-        nombre: form.nombre,
-        apellido: form.apellido,
-        email: form.email,
-        password: form.password,
-        fechaNacimiento: form.fechaNac,
-        tipoDescuento: 'NA',
-        tipoUsuario: 'CLIENTE',
-      });
-      //return response.data;
-      if (response.status === 200) {
-      Alert.alert(
-        'Cuenta creada exitosamente',
-        'Ingrese sus datos en la pantalla de Login para acceder',
-        [{ text: 'OK', onPress: () => navigation.navigate('Loguearse') }]
-      );
-      } else {
-        Alert.alert('Error', 'Error, intente nuevamente');
+  const validation_digit = (ci) => {
+    var a = 0;
+    var i = 0;
+    if (ci.length <= 6) {
+      for (i = ci.length; i < 7; i++) {
+        ci = '0' + ci;
       }
-    } catch (error) {
-      throw error;
+    }
+    for (i = 0; i < 7; i++) {
+      a += (parseInt("2987634"[i]) * parseInt(ci[i])) % 10;
+    }
+    if (a % 10 === 0) {
+      return 0;
+    } else {
+      return 10 - a % 10;
+    }
+  }
+
+  const clean_ci = (ci) => {
+    return ci.replace(/\D/g, '');
+  }
+
+  const validate_ci = (ci) => {
+    ci = clean_ci(ci);
+    var dig = ci[ci.length - 1];
+    ci = ci.replace(/[0-9]$/, '');
+    return (dig == validation_digit(ci));
+  }
+
+  const crearCuenta = async (form) => {
+    if(form.email === '' || form.nombre === '' || form.apellido === '' || form.cedual === '' || form.fechaNac === '' || form.password === ''){
+      Alert.alert("Error", "Complete todos los campos.");
+    } else if (!validate_ci(form.cedula)) {
+      Alert.alert("Error", "La cedula no es valida.");
+    } else if (form.password.length < 8 || !/\d/.test(form.password)) {
+      Alert.alert("Error", "La contraseña debe tener al menos 8 caracteres e incluir al menos un numero.");
+    } else {
+      const response = "";
+      response = await axios.post(`${BASE_URL}/usuario/alta`, {
+          cedula: form.cedula,
+          nombre: form.nombre,
+          apellido: form.apellido,
+          email: form.email,
+          password: form.password,
+          fechaNacimiento: form.fechaNac,
+          tipoDescuento: 'NA',
+          tipoUsuario: 'CLIENTE',
+        }).then(res => {
+          if (res.status === 200) {
+            Alert.alert(
+              'Cuenta creada exitosamente',
+              'Ingrese sus datos en la pantalla de Login para acceder',
+              [{ text: 'OK', onPress: () => navigation.navigate('Loguearse') }]
+            );
+          }
+        }).catch(e => {
+          Alert.alert('Error', e.response.data.message);
+        })
+        ;
     }
   };
 
@@ -138,9 +173,7 @@ export function SignUp() {
                   setShowDatePicker(false);
                   if (selectedDate) {
                     const d = selectedDate;
-                    const fechaFormateada = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1)
-                      .toString()
-                      .padStart(2, '0')}-${d.getFullYear()}`;
+                    const fechaFormateada = `${d.getFullYear().toString()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
                     setForm({ ...form, fechaNac: fechaFormateada });
                   }
                 }}
@@ -160,24 +193,7 @@ export function SignUp() {
               value={form.password} />
           </View>
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={async () => {
-                try {
-                  await crearCuenta(form);
-                  Alert.alert(
-                    'Registro exitoso',
-                    'Tu cuenta fue creada.',
-                    [{
-                        text: 'OK',
-                        onPress: () => navigation.navigate('Loguearse'),
-                      },
-                    ]
-                  );
-                } catch (error) {
-                  Alert.alert('Error', 'No se pudo crear la cuenta');
-                }
-              }}
-            >
+            <TouchableOpacity onPress={async () => {crearCuenta(form); }} >
               <View style={styles.btn}>
                 <Text style={styles.btnText}>Registrarse</Text>
               </View>
@@ -204,7 +220,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: '700',
     color: '#1D2A32',
     marginBottom: 3,

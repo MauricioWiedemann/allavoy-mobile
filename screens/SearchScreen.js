@@ -36,35 +36,27 @@ import { BASE_URL } from "../config";
     
     // llamada api para obtener localidades en el dropdown
     useEffect(() => {
-        setLoadingOrigen(true);
-        setLoadingDestino(true);
-        axios.get(`${BASE_URL}/localidad/obtener`)
-            .then(res => {
-                setOrigenItems(res.data.map(nombre => ({ value: nombre })));
-                setLoadingOrigen(false);
-                setDestinoItems(res.data.map(nombre => ({ value: nombre })));
-                setLoadingDestino(false);
-            })
-            .catch(() => setLoadingOrigen(false) && setLoadingDestino(false));
-    }, []);
-    /*
-    // datos para pruebas, borrar cuando se tenga la api
-    useEffect(() => {
-      const localidades = [
-        { value: 'Montevideo' },
-        { value: 'Salto' },
-        { value: 'Paysandú' },
-        { value: 'Maldonado' },
-        { value: 'Rivera' }
-      ];
-      setOrigenItems(localidades);
-      setDestinoItems(localidades);
-    }, []);
-*/
+  setLoadingOrigen(true);
+  setLoadingDestino(true);
+  axios.get(`${BASE_URL}/localidad/obtener`)
+      .then(res => {
+        // Filtra valores vacíos y asegura unicidad
+        const localidades = res.data.map((element) => ({ value: `${element.idLocalidad}`, label: `${element.nombre}`.concat(", ").concat(`${element.departamento}`) }));
+
+        setOrigenItems(localidades);
+        setDestinoItems(localidades);
+        setLoadingOrigen(false);
+        setLoadingDestino(false);
+      })
+      .catch(() => {
+        setLoadingOrigen(false);
+        setLoadingDestino(false);
+      });
+  }, []);
     const handleBuscar = () => {
       navigation.navigate('TripListScreen', {
-        origen: form.origen,
-        destino: form.destino,
+        origen: form.origen.value,
+        destino: form.destino.value,
         fecha: form.fecha,
         cantidad: form.cantidad,
         idaVuelta: form.idaVuelta,
@@ -102,7 +94,7 @@ import { BASE_URL } from "../config";
               <DropDownPicker
                 open={origenOpen}
                 value={origenValue}
-                items={origenItems.map(item => ({ label: item.value, value: item.value }))}
+                items={origenItems}
                 setOpen={setOrigenOpen}
                 setValue={val => {
                   setOrigenValue(val());
@@ -121,7 +113,7 @@ import { BASE_URL } from "../config";
               <DropDownPicker
                 open={destinoOpen}
                 value={destinoValue}
-                items={destinoItems.map(item => ({ label: item.value, value: item.value }))}
+                items={destinoItems}
                 setOpen={setDestinoOpen}
                 setValue={val => {
                   setDestinoValue(val());

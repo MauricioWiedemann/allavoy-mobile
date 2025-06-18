@@ -4,11 +4,11 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from "../config";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserInfo() {
   const { logout, login } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [original, setOriginal] = useState({});
   const [form, setForm] = useState({
     email: '',
     nombre: '',
@@ -17,41 +17,40 @@ export default function UserInfo() {
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  useEffect(() => {
-    axios.post(`${BASE_URL}/usuario/buscarporid`, {
-      idUsuario: login.id?.toString()
-    })
-      .then(res => {
-        const data = res.data;
-        setForm({
-          email: data.correo,
-          nombre: data.nombre,
-          apellido: data.apellido,
-          fechaNacimiento: data.fechaNacimiento,
-        });
-        setOriginal({
-          email: data.correo,
-          nombre: data.nombre,
-          apellido: data.apellido,
-          fechaNacimiento: data.fechaNacimiento,
-        });
-      })
-      .catch(() => Alert.alert('Error', 'Error en carga de datos'))
-      .finally(() => setLoading(false));
+  useEffect(() => { 
+    getInfoUser();
   }, []);
+
+  const getInfoUser = async () => {
+    let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
+      axios.post(`${BASE_URL}/usuario/buscarporid`, {
+      idUsuario: userInfoStorage.id
+      })
+        .then(res => {
+          const data = res.data;
+          setForm({
+            email: data.correo,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            fechaNacimiento: data.fechaNacimiento,
+          });
+        })
+        .catch(() => Alert.alert('Error', 'Error en carga de datos'))
+        .finally(() => setLoading(false));
+  }
 
   const handleChange = (field, value) => setForm({ ...form, [field]: value });
 
   const handleSave = async () => {
     try {
+      let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
       const res = await axios.post(`${BASE_URL}/usuario/editar`, {
-        idUsuario: login.id?.toString(),
+        idUsuario: userInfoStorage.id,
         nombre: form.nombre,
         apellido: form.apellido,
         fechaNacimiento: form.fechaNacimiento,
       });
       if (res.status === 200) {
-        setOriginal(form);
         Alert.alert('Éxito', 'Datos guardados');
       } else {
         Alert.alert('Error', 'No se pudo guardar');
@@ -61,15 +60,13 @@ export default function UserInfo() {
     }
   };
 
-  const handleCancel = () => setForm(original);
+  const handleCancel = () => getInfoUser();
 
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
       const d = selectedDate;
-      const fechaFormateada = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${d.getFullYear()}`;
+      const fechaFormateada = `${d.getFullYear().toString()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
       setForm({ ...form, fechaNacimiento: fechaFormateada });
     }
   };

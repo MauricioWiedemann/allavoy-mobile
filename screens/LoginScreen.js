@@ -8,8 +8,8 @@ import { AuthContext } from '../context/AuthContext';
     const navigation = useNavigation();
     const {login} = useContext(AuthContext);
     const [form, setForm] = useState({
-      email: '',
-      password: '',
+      email: 'c@c.com',
+      password: 'q1w2e3r4',
     });
 
     //Ver si el teclado esta abierto o no
@@ -67,12 +67,7 @@ import { AuthContext } from '../context/AuthContext';
             <View style={styles.formAction}>
               <TouchableOpacity 
                 
-                onPress={() => {
-                  console.log('Email:', form.email);
-                  console.log('Password:', form.password);
-                  login(form.email,form.password);
-                  
-                  }}>
+                onPress={() => { login(form.email,form.password); }}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>

@@ -12,10 +12,15 @@ export function ForgotPass() {
 
   const handleForgotPass = async () => {
     try {
-      await axios.post(`${BASE_URL}/auth/recuperar-password`, { correo: form.email });
-      alert(res.data.message);
+      const response = await axios.post(`${BASE_URL}/auth/recuperar-password`, { email: form.email })
+      .then(res => {
+        return res.data;
+      }).then(data => {
+        return data;
+      });
+      alert(response);
       navigation.navigate('Loguearse');
-    } catch (error) {
+    } catch (e) {
       alert('Error al enviar el mail de recuperación.');
     }
   };
