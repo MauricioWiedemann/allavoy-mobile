@@ -11,56 +11,55 @@ export function CartDetail({ route }) {
     idViajeIda,
     idViajeVuelta,
     selectedSeatsIda,
-    selectedSeats,
+    selectedSeatsVuelta,
     origen,
     destino,
     fechaIda,
     fechaRegreso,
     idaVuelta,
-    precio
+    precio,
+    omnibusIda,
+    omnibusVuelta
   } = route.params;
   
   const navigation = useNavigation();
   const {login} = useContext(AuthContext);
-  const origenOk = idaVuelta ? destino : origen;
-  const destinoOk = idaVuelta ? origen : destino;
 
   // Estados para hora salida/llegada de ida y vuelta
-  const [horaSalidaIda, setHoraSalidaIda] = useState('');
-  const [horaLlegadaIda, setHoraLlegadaIda] = useState('');
-  const [horaSalidaVuelta, setHoraSalidaVuelta] = useState('');
-  const [horaLlegadaVuelta, setHoraLlegadaVuelta] = useState('');
+  const [viajeIda, setViajeIda] = useState([]);
+  const [viajeVuelta, setViajeVuelta] = useState([]);
+  const [viajesCargados, setViajesCargados] = useState(false);
 
-  //hora salida/llegada para ida
+  //info de viaje ida
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/viaje/${idViajeIda}`)
+      .post(`${BASE_URL}/viaje/id/${idViajeIda}`)
       .then((res) => {
-        const viaje = res.data;
-        setHoraSalidaIda(viaje.fechaSalida ? viaje.fechaSalida.split('T')[1]?.substring(0, 5) : '');
-        setHoraLlegadaIda(viaje.fechaLlegada ? viaje.fechaLlegada.split('T')[1]?.substring(0, 5) : '');
+        setViajeIda(res.data);
       })
-      .catch(() => {
-        setHoraSalidaIda('');
-        setHoraLlegadaIda('');
+      .catch((e) => {
+        console.log(e.response.data);
       });
-  }, [idViajeIda]);
+  }, []);
 
-  //hora salida/llegada para vuelta
+  useEffect(() => {
+    if (!idaVuelta && viajeIda.length != 0 || idViajeIda && (viajeIda.length != 0 && viajeVuelta.length != 0)){
+      setViajesCargados(true);
+    }
+  }, [viajeIda, viajeVuelta]);
+
+  //info de  viaje vuelta
   useEffect(() => {
     if (!idaVuelta || !idViajeVuelta) return;
     axios
-      .get(`${BASE_URL}/viaje/${idViajeVuelta}`)
+      .post(`${BASE_URL}/viaje/id/${idViajeVuelta}`)
       .then((res) => {
-        const viaje = res.data;
-        setHoraSalidaVuelta(viaje.fechaSalida ? viaje.fechaSalida.split('T')[1]?.substring(0, 5) : '');
-        setHoraLlegadaVuelta(viaje.fechaLlegada ? viaje.fechaLlegada.split('T')[1]?.substring(0, 5) : '');
+        setViajeVuelta(res.data);
       })
-      .catch(() => {
-        setHoraSalidaVuelta('');
-        setHoraLlegadaVuelta('');
+      .catch((e) => {
+        console.log(e.response.data);
       });
-  }, [idaVuelta, idViajeVuelta]);
+  }, []);
 
   const handlePayment = async () => {
     try {
@@ -78,8 +77,20 @@ export function CartDetail({ route }) {
       }
 
       //compra asientos vuelta
-      if (idaVuelta && selectedSeats && Array.isArray(selectedSeats)) {
-        for (const asiento of selectedSeats) {
+      if (idaVuelta && selectedSeatsIda && Array.isArray(selectedSeatsIda)) {
+        for (const asiento of selectedSeatsIda) {
+          await axios.post(`${BASE_URL}/confirmar-compra`, { 
+            numeroAsiento: asiento, 
+            idUsuario: login.id, 
+            idViaje: idViajeVuelta, 
+            emailComprador: login.email, 
+            idPago: "ejemplo12345"
+          });
+        }
+      }
+
+      if (idaVuelta && selectedSeatsVuelta && Array.isArray(selectedSeatsVuelta)) {
+        for (const asiento of selectedSeatsVuelta) {
           await axios.post(`${BASE_URL}/confirmar-compra`, { 
             numeroAsiento: asiento, 
             idUsuario: login.id, 
@@ -110,56 +121,60 @@ export function CartDetail({ route }) {
             source={require('./../assets/logo.png')}
           />
         </View>
-        <Text style={styles.title}>Detalle de Compra</Text>
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-          {origenOk}
-          <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
-          {destinoOk} 
-        </Text>
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-          {fechaIda} {horaSalidaIda && `${horaSalidaIda}hs`}
-        </Text>
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-          {fechaIda} {horaLlegadaIda && `${horaLlegadaIda}hs`}
+        {viajesCargados && (
+        <>
+          <Text style={styles.title}>Detalle de Compra</Text>
+          <Text style={styles.txtDetail}>
+            <Text style={{fontWeight: 'bold'}}>Origen: </Text>
+            {viajeIda.origen.nombre}
+            <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
+            {viajeIda.destino.nombre} 
           </Text>
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
-          {tripIda?.omnibus} 409
-          </Text>        
-        <Text style={styles.txtDetail}>
-          <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
-          {(idaVuelta
-            ? (selectedSeatsIda? selectedSeatsIda.join(', ') : '-')
-            : (selectedSeats? selectedSeats.join(', ') : '-')
-          )}
-        </Text>
+          <Text style={styles.txtDetail}>
+            <Text style={{fontWeight: 'bold'}}>Salida: </Text>
+            {viajeIda.salida.replace("T", " ")}
+          </Text>
+          <Text style={styles.txtDetail}>
+            <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
+            {viajeIda.llegada.replace("T", " ")} 
+            </Text>
+          <Text style={styles.txtDetail}>
+            <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
+            {omnibusIda}
+            </Text>        
+          <Text style={styles.txtDetail}>
+            <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
+            {(idaVuelta
+              ? (selectedSeatsIda? selectedSeatsIda.join(', ') : '-')
+              : (selectedSeatsIda? selectedSeatsIda.join(', ') : '-')
+            )}
+          </Text>
+        </>
+        )}
 
-        {idaVuelta && (
+        {idaVuelta && viajesCargados && (
           <>
             <Text style={[styles.txtDetail, { marginTop: 20 }]}>
               <Text style={{fontWeight: 'bold'}}>Origen: </Text>
-              {destinoOk}
+              {viajeVuelta.origen.nombre}
               <Text style={{fontWeight: 'bold'}}> {'-'} Destino: </Text>  
-              {origenOk}
+              {viajeVuelta.destino.nombre}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Salida: </Text>
-              {fechaRegreso} {horaSalidaVuelta && `${horaSalidaVuelta}hs`}
+              {viajeVuelta.salida.replace("T", " ")}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Llegada: </Text>
-              {fechaRegreso} {horaLlegadaVuelta && `${horaLlegadaVuelta}hs`}
+              {viajeVuelta.llegada.replace("T", " ")}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Omnibus: </Text>
-              {tripVuelta?.omnibus || '708'}
+              {omnibusVuelta}
             </Text>
             <Text style={styles.txtDetail}>
               <Text style={{fontWeight: 'bold'}}>Asientos seleccionados: </Text>
-              {selectedSeats && Array.isArray(selectedSeats) ? selectedSeats.join(', ') : '-'}
+              {selectedSeatsVuelta && Array.isArray(selectedSeatsVuelta) ? selectedSeatsVuelta.join(', ') : '-'}
             </Text>
           </>
         )}

@@ -7,8 +7,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
 import { BASE_URL } from "../config";
 
-
-
   export function SearchBus() {
     const navigation = useNavigation();
     const [isChecked, setChecked] = useState(false);
@@ -32,35 +30,35 @@ import { BASE_URL } from "../config";
     const [destinoItems, setDestinoItems] = useState([]);
     const [destinoValue, setDestinoValue] = useState(null);
     const [loadingDestino, setLoadingDestino] = useState(false);
-
     
     // llamada api para obtener localidades en el dropdown
     useEffect(() => {
-  setLoadingOrigen(true);
-  setLoadingDestino(true);
-  axios.get(`${BASE_URL}/localidad/obtener`)
-      .then(res => {
-        // Filtra valores vacíos y asegura unicidad
-        const localidades = res.data.map((element) => ({ value: `${element.idLocalidad}`, label: `${element.nombre}`.concat(", ").concat(`${element.departamento}`) }));
+      setLoadingOrigen(true);
+      setLoadingDestino(true);
+      axios.get(`${BASE_URL}/localidad/obtener`)
+          .then(res => {
+            // Filtra valores vacíos y asegura unicidad
+            const localidades = res.data.map((element) => ({ value: `${element.idLocalidad}`, label: `${element.nombre}`.concat(", ").concat(`${element.departamento}`) }));
 
-        setOrigenItems(localidades);
-        setDestinoItems(localidades);
-        setLoadingOrigen(false);
-        setLoadingDestino(false);
-      })
-      .catch(() => {
-        setLoadingOrigen(false);
-        setLoadingDestino(false);
-      });
-  }, []);
+            setOrigenItems(localidades);
+            setDestinoItems(localidades);
+            setLoadingOrigen(false);
+            setLoadingDestino(false);
+          })
+          .catch(() => {
+            setLoadingOrigen(false);
+            setLoadingDestino(false);
+          });
+      }, []);
+
     const handleBuscar = () => {
       navigation.navigate('TripListScreen', {
-        origen: form.origen.value,
-        destino: form.destino.value,
-        fecha: form.fecha,
+        origen: form.origen,
+        destino: form.destino,
+        fecha: form.fecha.concat("T00:00"),
         cantidad: form.cantidad,
         idaVuelta: form.idaVuelta,
-        fechaRegreso: form.fechaRegreso,
+        fechaRegreso: form.fechaRegreso.concat("T00:00")
       });
     };
 
@@ -151,7 +149,7 @@ import { BASE_URL } from "../config";
                       const day = selectedDate.getDate().toString().padStart(2, '0');
                       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
                       const year = selectedDate.getFullYear();
-                      setForm({ ...form, fecha: `${day}-${month}-${year}` });
+                      setForm({ ...form, fecha: `${year}-${month}-${day}` });
                     }
                   }}
                 />
@@ -221,7 +219,7 @@ import { BASE_URL } from "../config";
                         const day = selectedDate.getDate().toString().padStart(2, '0');
                         const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
                         const year = selectedDate.getFullYear();
-                        setForm({ ...form, fechaRegreso: `${day}-${month}-${year}` });
+                        setForm({ ...form, fechaRegreso: `${year}-${month}-${day}` });
                       }
                     }}
                   />

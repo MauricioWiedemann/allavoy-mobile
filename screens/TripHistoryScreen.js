@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { BASE_URL } from "../config";
-import { FlatList, StyleSheet, SafeAreaView, View, Image, Text } from 'react-native';
+import { RefreshControl, FlatList, StyleSheet, SafeAreaView, View, Image, Text } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import { AuthContext } from '../context/AuthContext';
@@ -8,17 +9,21 @@ import { AuthContext } from '../context/AuthContext';
 export default function TripHistory() {
   const [data, setData] = useState([]);
   const { login } = useContext(AuthContext);
+  const [refreshing, setRefreshing] = useState(false);
 
   //api viajes
-  const history = () => {
-    axios
+  const history = async () => {
+    setRefreshing(true);
+    let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
+    await axios
       .post(`${BASE_URL}/pasajes/historicocompra`, {
-        email: login.email
+        email: userInfoStorage.email
       })
       .then((res) => {
         setData(res.data);
       })
       .catch(() => setData([]));
+      setRefreshing(false);
   };
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export default function TripHistory() {
             data={data}
             renderItem={renderItem}
             keyExtractor={(_, idx) => idx.toString()}
+            refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={history} /> }
           />
         </View>
       </View>

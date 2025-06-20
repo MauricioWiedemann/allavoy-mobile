@@ -18,7 +18,10 @@ export function SeatSelecionPage({ route }) {
           fechaRegreso,
           idViajeVuelta,
           selectedSeatsIda,
-          capacidadOmnibus } = route.params;
+          capacidadOmnibus,
+          omnibusIda,
+          omnibusVuelta 
+        } = route.params;
 
   const navigation = useNavigation();
 
@@ -33,7 +36,8 @@ export function SeatSelecionPage({ route }) {
     { fila: 8, asientos: [29, 30, 31, 32] },
     { fila: 9, asientos: [33, 34, 35, 36] },
     { fila: 10, asientos: [37, 38, 39, 40] }
-]);
+  ]);
+
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   const toggleSeat = (seatNumber) => {
@@ -50,7 +54,7 @@ export function SeatSelecionPage({ route }) {
   const handleConfirm = () => {
     if (idaVuelta) {
       // ida
-      if (!selectedSeatsIda && !tripVuelta) {
+      if (!selectedSeatsIda) {
         navigation.navigate('TripListScreen', {
           origen: destino,
           destino: origen,
@@ -61,13 +65,15 @@ export function SeatSelecionPage({ route }) {
           idViajeIda,
           fechaIda,
           fechaRegreso,
-          precio
+          precio,
+          omnibusIda,
+          omnibusVuelta
         });
       }
       // vuelta
-      else if (selectedSeatsIda && tripVuelta) {
+      else if (selectedSeatsIda) {
         navigation.navigate('CartDetail', {
-          selectedSeats: selectedSeats,
+          selectedSeatsVuelta: selectedSeats,
           selectedSeatsIda,  
           idViajeVuelta,  
           idViajeIda,  
@@ -77,13 +83,15 @@ export function SeatSelecionPage({ route }) {
           fechaRegreso,
           cantidad,
           idaVuelta,
-          precio
+          precio,
+          omnibusIda,
+          omnibusVuelta
         });
       }
     } else {
       // solo ida
       navigation.navigate('CartDetail', {
-        selectedSeats,
+        selectedSeatsIda: selectedSeats,
         idViajeIda,
         origen,
         destino,
@@ -91,7 +99,8 @@ export function SeatSelecionPage({ route }) {
         cantidad,
         idaVuelta,
         fechaRegreso,
-        precio
+        precio,
+        omnibusIda
       });
     }
   };

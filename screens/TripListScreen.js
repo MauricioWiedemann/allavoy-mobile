@@ -1,5 +1,5 @@
 import React, { useState,useContext, useEffect } from 'react';
-import {FlatList, ActivityIndicator, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import {FlatList, ActivityIndicator, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Alert } from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
@@ -15,9 +15,12 @@ import { BASE_URL } from "../config";
     idaVuelta,
     fechaRegreso,
     selectedSeatsIda,
+    selectedSeatsVuelta,
     precio,
     idViajeIda,
     fechaIda,
+    omnibusIda,
+    omnibusVuelta
   } = route.params;
 
     const navigation = useNavigation();
@@ -29,22 +32,25 @@ import { BASE_URL } from "../config";
     const localidadOrigen = origen;
     const localidadDestino = destino;
 
+    useEffect(() => {
+      getdata();
+    }, [fechaViaje]);
+
     //api viajes
     const getdata = () => {
-      axios
-        .post(`${BASE_URL}/viaje/buscar`, {
-          origen: localidadOrigen,
-          destino: localidadDestino,
-          fecha: fechaViaje,
-          cantidad: cantidad,
-        })
-        .then((res) => {
-          setData(res.data);
-        })
-        .catch(() => setData([]));
+      axios.post(`${BASE_URL}/viaje/buscar`, {
+        origen: localidadOrigen,
+        destino: localidadDestino,
+        fecha: fechaViaje,
+        cantidad: cantidad,
+      }).then((res) => {
+        setData(res.data);
+      }).catch(e => {
+        Alert.alert('Error', e.response.data.message);
+      });
     };
 
-  const renderItem = ({ item }) => {
+    const renderItem = ({ item }) => {
 
     const horaSalida = item.fechaSalida ? item.fechaSalida.split('T')[1]?.substring(0, 5) : '';
     const horaLlegada = item.fechaLlegada ? item.fechaLlegada.split('T')[1]?.substring(0, 5) : '';
@@ -54,10 +60,9 @@ import { BASE_URL } from "../config";
       <TouchableOpacity
         style={styles.itemBox}
         onPress={() => {
-          let precio;
           // elegir viaje de ida cuando idaVuelta es true
           if (idaVuelta && !selectedSeatsIda) {
-            precio = cantidad * item.precio;
+            let precioIda = cantidad * item.precio;
             navigation.navigate('SeatSelecionPage', {
               idViajeIda: item.idViaje,
               asientosOcupados: item.asientosOcupados,
@@ -66,42 +71,52 @@ import { BASE_URL } from "../config";
               fechaIda: fechaViaje,
               cantidad,
               idaVuelta,
-              fechaRegreso,
-              precio,
-              capacidadOmnibus: item.cantidad
+              fechaRegreso: fechaRegreso,
+              selectedSeatsIda,
+              selectedSeatsVuelta,
+              precio: precioIda,
+              capacidadOmnibus: item.omnibus.capacidad,
+              omnibusIda: item.omnibus.matricula,
+              omnibusVuelta,
             });
           }
           //elegir asientos vuelta
           else if (idaVuelta && selectedSeatsIda) {
-            precio = precio + (cantidad * item.precio);
+            let precioVuelta = precio + (cantidad * item.precio);
             navigation.navigate('SeatSelecionPage', {
               idViajeIda: idViajeIda,
               idViajeVuelta: item.idViaje,
               asientosOcupados: item.asientosOcupados,
-              origen: localidadOrigen,
-              destino: localidadDestino,
+              origen,
+              destino,
               fechaIda,
               cantidad,
               idaVuelta,
-              fechaRegreso,
+              fechaRegreso: fechaRegreso,
               selectedSeatsIda,
-              precio,
-              capacidadOmnibus: item.cantidad
+              selectedSeatsVuelta,
+              precio: precioVuelta,
+              capacidadOmnibus: item.omnibus.capacidad,
+              omnibusIda,
+              omnibusVuelta: item.omnibus.matricula
             });
           }
           //solo ida
           else {
-            precio = cantidad * item.precio;
+            let precioIda = cantidad * item.precio;
             navigation.navigate('SeatSelecionPage', {
               idViajeIda: item.idViaje,
-              asientosOcupados: item.asientosOcupados,
+              asientosOcupadosIda: item.asientosOcupados,
               origen: localidadOrigen,
               destino: localidadDestino,
               fechaIda: fechaViaje,
               cantidad,
               idaVuelta,
-              precio,
-              capacidadOmnibus: item.cantidad
+              fechaRegreso,
+              selectedSeatsIda,
+              precio: precioIda,
+              capacidadOmnibus: item.omnibus.capacidad,
+              omnibusIda: item.omnibus.matricula
             });
           }
         }}
@@ -171,17 +186,16 @@ import { BASE_URL } from "../config";
                     <Text style={{ fontSize: 20 }}>Origen: {localidadOrigen} -{'>'} Destino: {localidadDestino}</Text>
                 </Text>
                 <Text style={styles.subtitle}>
-                    <Text style={{ fontSize: 20 }}>Fecha: {fechaViaje}</Text>
+                    <Text style={{ fontSize: 20 }}>Fecha: {fechaViaje.replace("T", " ")}</Text>
                 </Text>
             </View>
           <View style={styles.form}>
                 <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.login.uuid}
+                keyExtractor={(item) => item.idViaje}
                 onEndReached={loadMoreItem}
                 onEndReachedThreshold={0}
-                ListFooterComponent={renderLoadingWheel}
                 />
           </View>
         </View>
