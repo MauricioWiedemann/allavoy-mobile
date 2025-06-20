@@ -5,10 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 export default function CompraExitosa() {
   const navigation = useNavigation();
 
-  const handleDescargarPDF = () => {
-    Alert.alert('TBD', 'La descarga de PDF no se encuentra disponible.');
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
       <View style={styles.container}>
@@ -26,13 +22,6 @@ export default function CompraExitosa() {
           <TouchableOpacity onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btn}>
               <Text style={styles.btnText}>Volver al inicio</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formAction}>
-          <TouchableOpacity onPress={handleDescargarPDF}>
-            <View style={styles.btnCancel}>
-              <Text style={styles.btnTextCancel}>Descargar PDF</Text>
             </View>
           </TouchableOpacity>
         </View>

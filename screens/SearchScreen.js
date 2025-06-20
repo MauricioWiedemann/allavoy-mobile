@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Alert,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from 'expo-checkbox';
@@ -38,7 +38,7 @@ import { BASE_URL } from "../config";
       axios.get(`${BASE_URL}/localidad/obtener`)
           .then(res => {
             // Filtra valores vacíos y asegura unicidad
-            const localidades = res.data.map((element) => ({ value: `${element.idLocalidad}`, label: `${element.nombre}`.concat(", ").concat(`${element.departamento}`) }));
+            const localidades = res.data.map((element) => ({ value: `${element.idLocalidad}`, label: `${element.nombre}`.concat(", ").concat((`${element.departamento}`).replace("_", " ")) }));
 
             setOrigenItems(localidades);
             setDestinoItems(localidades);
@@ -52,14 +52,18 @@ import { BASE_URL } from "../config";
       }, []);
 
     const handleBuscar = () => {
-      navigation.navigate('TripListScreen', {
-        origen: form.origen,
-        destino: form.destino,
-        fecha: form.fecha.concat("T00:00"),
-        cantidad: form.cantidad,
-        idaVuelta: form.idaVuelta,
-        fechaRegreso: form.fechaRegreso.concat("T00:00")
+      if (form.origen === '' || form.destino === '' || form.fecha === '' || form.cantidad === '' || (form.idaVuelta && form.fechaRegreso === '')){
+        Alert.alert("Error", "Complete todos los campos.");
+      } else {
+        navigation.navigate('TripListScreen', {
+          origen: form.origen,
+          destino: form.destino,
+          fecha: form.fecha.concat("T00:00"),
+          cantidad: form.cantidad,
+          idaVuelta: form.idaVuelta,
+          fechaRegreso: form.fechaRegreso.concat("T00:00")
       });
+      }
     };
 
     //Ver si el teclado esta abierto o no
@@ -145,11 +149,15 @@ import { BASE_URL } from "../config";
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
-                    if (selectedDate) {
-                      const day = selectedDate.getDate().toString().padStart(2, '0');
-                      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-                      const year = selectedDate.getFullYear();
-                      setForm({ ...form, fecha: `${year}-${month}-${day}` });
+                    if (selectedDate >= new Date()){
+                      if (selectedDate) {
+                        const day = selectedDate.getDate().toString().padStart(2, '0');
+                        const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+                        const year = selectedDate.getFullYear();
+                        setForm({ ...form, fecha: `${year}-${month}-${day}`, fechaRegreso: `` });
+                      }
+                    } else {
+                      Alert.alert("Error", "La fecha no puede ser menor a la actual.");
                     }
                   }}
                 />
@@ -215,11 +223,15 @@ import { BASE_URL } from "../config";
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     onChange={(event, selectedDate) => {
                       setShowDatePicker(false);
-                      if (selectedDate) {
-                        const day = selectedDate.getDate().toString().padStart(2, '0');
-                        const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-                        const year = selectedDate.getFullYear();
-                        setForm({ ...form, fechaRegreso: `${year}-${month}-${day}` });
+                      if (selectedDate > new Date(form.fecha)){
+                        if (selectedDate) {
+                          const day = selectedDate.getDate().toString().padStart(2, '0');
+                          const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+                          const year = selectedDate.getFullYear();
+                          setForm({ ...form, fechaRegreso: `${year}-${month}-${day}` });
+                        }
+                      } else {
+                        Alert.alert("Error", "La fecha no puede ser menor a la de ida.");
                       }
                     }}
                   />

@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from "../config";
-
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function CartDetail({ route }) {
   const {
@@ -62,51 +62,39 @@ export function CartDetail({ route }) {
   }, []);
 
   const handlePayment = async () => {
+    let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
     try {
       // compra asientos ida
       if (selectedSeatsIda && Array.isArray(selectedSeatsIda)) {
         for (const asiento of selectedSeatsIda) {
-          await axios.post(`${BASE_URL}/confirmar-compra`, { 
+          await axios.post(`${BASE_URL}/pasajes/confirmar-compra`, { 
             numeroAsiento: asiento, 
-            idUsuario: login.id, 
+            idUsuario: userInfoStorage.id, 
             idViaje: idViajeIda, 
-            emailComprador: login.email, 
-            idPago: "ejemplo12345"
+            emailComprador: userInfoStorage.email, 
+            idPago: "XXXX-XXXX"
           });
         }
       }
 
       //compra asientos vuelta
-      if (idaVuelta && selectedSeatsIda && Array.isArray(selectedSeatsIda)) {
-        for (const asiento of selectedSeatsIda) {
-          await axios.post(`${BASE_URL}/confirmar-compra`, { 
-            numeroAsiento: asiento, 
-            idUsuario: login.id, 
-            idViaje: idViajeVuelta, 
-            emailComprador: login.email, 
-            idPago: "ejemplo12345"
-          });
-        }
-      }
-
       if (idaVuelta && selectedSeatsVuelta && Array.isArray(selectedSeatsVuelta)) {
         for (const asiento of selectedSeatsVuelta) {
-          await axios.post(`${BASE_URL}/confirmar-compra`, { 
+          await axios.post(`${BASE_URL}/pasajes/confirmar-compra`, { 
             numeroAsiento: asiento, 
-            idUsuario: login.id, 
+            idUsuario: userInfoStorage.id, 
             idViaje: idViajeVuelta, 
-            emailComprador: login.email, 
-            idPago: "ejemplo12345"
+            emailComprador: userInfoStorage.email, 
+            idPago: "XXXX-XXXX"
           });
         }
       }
-
       alert('Exito, compra realizada correctamente');
       navigation.navigate('CompraExitosaScreen');
     } catch (error) {
+      console.log(error.response.data);
       Alert.alert('Error', 'No se pudo realizar la compra.');
-      //volvemos a la pantalla de inicio?
-      //navigation.navigate('SearchScreen');
+      navigation.navigate('SearchScreen');
     }
   };
 
