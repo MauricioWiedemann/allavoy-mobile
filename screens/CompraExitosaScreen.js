@@ -18,6 +18,9 @@ export default function CompraExitosa() {
             resizeMode="contain"
           />
         </View>
+        <View style={styles.header}>
+          <Text style={styles.text}>Se le envio un correo con los boletos.</Text>
+        </View>
         <View style={styles.formAction}>
           <TouchableOpacity onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btn}>
@@ -45,6 +48,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
+    marginBottom: 6,
+    color: '#292929',
+    textAlign: 'center',
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 6,
     marginBottom: 6,
     color: '#292929',
     textAlign: 'center',

@@ -43,8 +43,19 @@ export const AuthProvider = ({children}) => {
         setIsLoading(false);
     }
 
-    const logout = () => {
+    const logout = async () => {
         setIsLoading(true);
+        try {
+            await axios.delete(`${BASE_URL}/auth/logout`, {
+                headers: {
+                    "Authorization": "Bearer " + userToken
+                }
+            }).then(response => {
+                return response;
+            })
+        } catch (e) {
+            console.log("Error: ", e);
+        }
         setUserToken(null);
         AsyncStorage.removeItem('userInfo');
         AsyncStorage.removeItem('userToken');
