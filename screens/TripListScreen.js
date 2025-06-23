@@ -106,7 +106,7 @@ import { BASE_URL } from "../config";
             let precioIda = cantidad * item.precio;
             navigation.navigate('SeatSelecionPage', {
               idViajeIda: item.idViaje,
-              asientosOcupadosIda: item.asientosOcupados,
+              asientosOcupados: item.asientosOcupados,
               origen: localidadOrigen,
               destino: localidadDestino,
               fechaIda: fechaViaje,

@@ -93,9 +93,9 @@ export function SeatSelecionPage({ route }) {
       navigation.navigate('CartDetail', {
         selectedSeatsIda: selectedSeats,
         idViajeIda,
-        origen,
-        destino,
-        fechaIda,
+        origen: destino,
+        destino: origen,
+        fechaIda: fechaRegreso,
         cantidad,
         idaVuelta,
         fechaRegreso,

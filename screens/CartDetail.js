@@ -89,12 +89,11 @@ export function CartDetail({ route }) {
           });
         }
       }
-      alert('Exito, compra realizada correctamente');
+      //alert('Exito, compra realizada correctamente');
       navigation.navigate('CompraExitosaScreen');
     } catch (error) {
       console.log(error.response.data);
       Alert.alert('Error', 'No se pudo realizar la compra.');
-      navigation.navigate('SearchScreen');
     }
   };
 
