@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Linking} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from 'expo-checkbox';
@@ -82,7 +82,16 @@ import { BASE_URL } from "../config";
               setIsKeyboardOpen(false)
           );
         })
-    
+
+    const handleWhatsApp = () => {
+      const phone = '59893312683';
+      const message = 'Hola, necesito ayuda con la app';
+      const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(message)}`;
+      Linking.openURL(url).catch(() => {
+        alert('No se pudo abrir WhatsApp');
+      });
+    };
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
         <View style={styles.container}>
@@ -246,6 +255,17 @@ import { BASE_URL } from "../config";
             </View>
           </View>
         </View>
+        <TouchableOpacity
+          style={styles.whatsappButtonTop}
+          onPress={handleWhatsApp}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png' }}
+            style={styles.whatsappIcon}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -355,6 +375,23 @@ import { BASE_URL } from "../config";
     fontSize: 22,
     fontWeight: 'bold',
     color: '#075eec',
+  },
+  whatsappButtonTop: {
+    position: 'absolute',
+    top: 50, 
+    right: 20, 
+    backgroundColor: '#25D366',
+    borderRadius: 35,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    zIndex: 999,
+  },
+  whatsappIcon: {
+    width: 38,
+    height: 38,
   },
   });
 
