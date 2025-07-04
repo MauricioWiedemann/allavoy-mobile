@@ -6,10 +6,12 @@ import CheckBox from 'expo-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
 import { BASE_URL } from "../config";
+import { useNotification } from '../context/NotificationContext';
 
 
 
   export function SearchBus() {
+    const { expoPushToken, notification, error } = useNotification();
     const navigation = useNavigation();
     const [isChecked, setChecked] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
