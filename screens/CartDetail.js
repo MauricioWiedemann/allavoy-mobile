@@ -63,6 +63,7 @@ export function CartDetail({ route }) {
 
   const handlePayment = async () => {
     let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
+    const idPasajes = [];
     try {
       // compra asientos ida
       if (selectedSeatsIda && Array.isArray(selectedSeatsIda)) {
@@ -73,6 +74,9 @@ export function CartDetail({ route }) {
             idViaje: idViajeIda, 
             emailComprador: userInfoStorage.email, 
             idPago: "XXXX-XXXX"
+          }).then(response => {
+            const data = response.data;
+            idPasajes.push(data.idPasaje);
           });
         }
       }
@@ -86,11 +90,16 @@ export function CartDetail({ route }) {
             idViaje: idViajeVuelta, 
             emailComprador: userInfoStorage.email, 
             idPago: "XXXX-XXXX"
+          }).then(response => {
+            const data = response.data;
+            idPasajes.push(data.idPasaje);
           });
         }
       }
       //alert('Exito, compra realizada correctamente');
-      navigation.navigate('CompraExitosaScreen');
+      navigation.navigate('CompraExitosaScreen', {
+        idPasajes: idPasajes
+      });
     } catch (error) {
       console.log(error.response.data);
       Alert.alert('Error', 'No se pudo realizar la compra.');

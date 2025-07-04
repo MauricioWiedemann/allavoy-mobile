@@ -1,9 +1,51 @@
 import React from 'react';
 import { SafeAreaView, View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { BASE_URL } from "../config";
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
 
-export default function CompraExitosa() {
+
+export default function CompraExitosa({ route }) {
   const navigation = useNavigation();
+  const {idPasajes} = route.params;
+
+  const handleDescargarPDF = async () => {
+
+    if (!idPasajes || idPasajes.length === 0) {
+      Alert.alert("Error", "No hay pasajes para descargar.");
+      return;
+    }
+
+    const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if(!permissions.granted){
+      Alert.alert("Error", "Se tienen que dar permisos")
+      return;
+    }
+
+    for (const id of idPasajes) {
+      try {
+        const filename = `detalle_pasaje_${id}.pdf`;
+        const response = await FileSystem.downloadAsync(
+          `${BASE_URL}/pasajes/descargar-pdf/${id}`,
+          FileSystem.documentDirectory + filename,
+        );
+        save(response.uri, filename, permissions);
+      } catch (error) {
+        console.error("Error al descargar PDF:", error);
+      }
+    } 
+  };
+
+  const save = async (uri, filename, permissions) => {
+    const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+
+    await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, 'application/pdf')
+      .then(async (uri) => {
+        await FileSystem.writeAsStringAsync(uri, base64, { encoding: FileSystem.EncodingType.Base64 });
+      })
+      .catch(e => console.log(e));
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
@@ -25,6 +67,13 @@ export default function CompraExitosa() {
           <TouchableOpacity onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btn}>
               <Text style={styles.btnText}>Volver al inicio</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.formAction}>
+          <TouchableOpacity onPress={handleDescargarPDF}>
+            <View style={styles.btnCancel}>
+              <Text style={styles.btnTextCancel}>Descargar PDF</Text>
             </View>
           </TouchableOpacity>
         </View>
