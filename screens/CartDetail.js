@@ -5,6 +5,7 @@ import { BASE_URL } from "../config";
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PayPal from 'expo-paypal';
 
 export function CartDetail({ route }) {
   const {
@@ -61,7 +62,11 @@ export function CartDetail({ route }) {
       });
   }, []);
 
-  const handlePayment = async () => {
+  const sendPayment = async (startProcess) => {
+    startProcess()
+  };
+
+  const handlePayment = async (idPago) => {
     let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
     const idPasajes = [];
     try {
@@ -73,7 +78,7 @@ export function CartDetail({ route }) {
             idUsuario: userInfoStorage.id, 
             idViaje: idViajeIda, 
             emailComprador: userInfoStorage.email, 
-            idPago: "XXXX-XXXX"
+            idPago: idPago
           }).then(response => {
             const data = response.data;
             idPasajes.push(data.idPasaje);
@@ -89,7 +94,7 @@ export function CartDetail({ route }) {
             idUsuario: userInfoStorage.id, 
             idViaje: idViajeVuelta, 
             emailComprador: userInfoStorage.email, 
-            idPago: "XXXX-XXXX"
+            idPago: idPago
           }).then(response => {
             const data = response.data;
             idPasajes.push(data.idPasaje);
@@ -212,11 +217,16 @@ export function CartDetail({ route }) {
         </View>
 
         <View style={styles.formAction}>
-          <TouchableOpacity onPress={handlePayment}>
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>Comprar con Paypal</Text>
-            </View>
-          </TouchableOpacity>
+          <PayPal
+            popupContainerStyle={{ height: 500 }}
+            onPress={(startProcess) => sendPayment(startProcess)}
+            title="Comprar"
+            buttonStyles={styles?.btn}
+            btnTextStyles={styles?.btnText}
+            amount={precio/40}
+            success={(a) => { handlePayment(a.orderID); }}
+            failed={(a) => { Alert("Error", "Algo ha salido mal.") }}
+          />
           <TouchableOpacity
               onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btnCancel} >
@@ -298,6 +308,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#075eec',
     borderColor: '#075eec',
+    width: '100%'
   },
   btnText: {
     fontSize: 25,
