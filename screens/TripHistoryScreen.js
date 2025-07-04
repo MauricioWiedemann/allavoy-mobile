@@ -43,11 +43,11 @@ export default function TripHistory() {
         </Text>
         <Text style={styles.tripDetail}>
           <Text style={{ fontWeight: 'bold' }}>Salida: </Text>
-          {h.fechaSalida}
+          {h.fechaSalida.replace("T", " ")}
         </Text>
         <Text style={styles.tripDetail}>
           <Text style={{ fontWeight: 'bold' }}>Llegada: </Text>
-          {h.fechaLlegada}
+          {h.fechaLlegada.replace("T", " ")}
         </Text>
         <Text style={styles.tripDetail}>
           <Text style={{ fontWeight: 'bold' }}>Asiento: </Text>

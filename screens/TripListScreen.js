@@ -54,7 +54,7 @@ import { BASE_URL } from "../config";
 
     const horaSalida = item.fechaSalida ? item.fechaSalida.split('T')[1]?.substring(0, 5) : '';
     const horaLlegada = item.fechaLlegada ? item.fechaLlegada.split('T')[1]?.substring(0, 5) : '';
-    const asientosDisponibles = item.cantidad - item.cantidadOcupados;
+    const asientosDisponibles = item.cantidad;
 
     return (
       <TouchableOpacity

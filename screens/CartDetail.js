@@ -30,17 +30,31 @@ export function CartDetail({ route }) {
   const [viajeIda, setViajeIda] = useState([]);
   const [viajeVuelta, setViajeVuelta] = useState([]);
   const [viajesCargados, setViajesCargados] = useState(false);
+  const [descuento, setDescuento] = useState(0);
 
   //info de viaje ida
   useEffect(() => {
-    axios
-      .post(`${BASE_URL}/viaje/id/${idViajeIda}`)
-      .then((res) => {
-        setViajeIda(res.data);
-      })
-      .catch((e) => {
-        console.log(e.response.data);
-      });
+    const onRender = async () => {
+      axios
+        .post(`${BASE_URL}/viaje/id/${idViajeIda}`)
+        .then((res) => {
+          setViajeIda(res.data);
+        })
+        .catch((e) => {
+          console.log(e.response.data);
+        });
+      let userInfoStorage = JSON.parse(await AsyncStorage.getItem('userInfo') );
+      axios
+        .get(`${BASE_URL}/usuario/descuento?email=${userInfoStorage.email}`)
+        .then((res) => {
+          if (res.data.tipoDescuento !== "NA")
+            setDescuento(0.2);
+        })
+        .catch((e) => {
+          console.log(e.response.data);
+        });
+    };
+    onRender();
   }, []);
 
   useEffect(() => {
@@ -193,7 +207,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>Descuentos: </Text>
           </Text>
           <Text style={styles.txtDetail}>
-            $50 
+            ${(precio*descuento)}
           </Text>
         </View>
         <View style={{ 
@@ -212,7 +226,7 @@ export function CartDetail({ route }) {
             <Text style={{fontWeight: 'bold'}}>Total:</Text>
           </Text>
           <Text style={styles.txtDetail}>
-            ${precio-50}
+            ${precio-(precio*descuento)}
           </Text>
         </View>
 
@@ -223,7 +237,7 @@ export function CartDetail({ route }) {
             title="Comprar"
             buttonStyles={styles?.btn}
             btnTextStyles={styles?.btnText}
-            amount={precio/40}
+            amount={((precio)-precio*descuento)/40}
             success={(a) => { handlePayment(a.orderID); }}
             failed={(a) => { Alert("Error", "Algo ha salido mal.") }}
           />
