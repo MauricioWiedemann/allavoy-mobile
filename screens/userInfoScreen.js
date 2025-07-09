@@ -22,9 +22,11 @@ export default function UserInfo() {
   }, []);
 
   const getInfoUser = async () => {
-    let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
-      axios.post(`${BASE_URL}/usuario/buscarporid`, {
-      idUsuario: userInfoStorage.id
+    let userTokenStorage = await AsyncStorage.getItem('userToken');
+      axios.get(`${BASE_URL}/usuario/buscarporid`, {
+        headers: {
+          "Authorization": "Bearer " + userTokenStorage
+        }
       })
         .then(res => {
           const data = res.data;
@@ -43,13 +45,19 @@ export default function UserInfo() {
 
   const handleSave = async () => {
     try {
-      let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
+      //let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
+      let userTokenStorage = await AsyncStorage.getItem('userToken');
       const res = await axios.post(`${BASE_URL}/usuario/editar`, {
-        idUsuario: userInfoStorage.id,
+        //idUsuario: userInfoStorage.id,
         nombre: form.nombre,
         apellido: form.apellido,
         fechaNacimiento: form.fechaNacimiento,
-      });
+        }, {
+          headers: {
+          "Authorization": "Bearer " + userTokenStorage
+          }
+        }
+      );
       if (res.status === 200) {
         Alert.alert('Éxito', 'Datos guardados');
       } else {

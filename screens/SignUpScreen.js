@@ -56,15 +56,13 @@ export function SignUp() {
       Alert.alert("Error", "La contraseña debe tener al menos 8 caracteres e incluir al menos un numero.");
     } else {
       const response = "";
-      response = await axios.post(`${BASE_URL}/usuario/alta`, {
+      response = await axios.post(`${BASE_URL}/usuario/registro`, {
           cedula: form.cedula,
           nombre: form.nombre,
           apellido: form.apellido,
           email: form.email,
           password: form.password,
           fechaNacimiento: form.fechaNac,
-          tipoDescuento: 'NA',
-          tipoUsuario: 'CLIENTE',
         }).then(res => {
           if (res.status === 200) {
             Alert.alert(

@@ -8,8 +8,8 @@ import { AuthContext } from '../context/AuthContext';
     const navigation = useNavigation();
     const {login} = useContext(AuthContext);
     const [form, setForm] = useState({
-      email: 'c@c.com',
-      password: 'q1w2e3r4',
+      email: '',
+      password: '',
     });
 
     //Ver si el teclado esta abierto o no
