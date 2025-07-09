@@ -1,5 +1,5 @@
 import React, { useState,useContext, useEffect } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Alert,} from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import { AuthContext } from '../context/AuthContext';
@@ -11,6 +11,14 @@ import { AuthContext } from '../context/AuthContext';
       email: '',
       password: '',
     });
+
+    const validaCampos = () => {
+      if(form.email==='' || form.password===''){
+        Alert.alert("Error", "Complete todos los campos");
+      } else {
+        login(form.email,form.password);
+      }
+    }
 
     //Ver si el teclado esta abierto o no
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -67,7 +75,7 @@ import { AuthContext } from '../context/AuthContext';
             <View style={styles.formAction}>
               <TouchableOpacity 
                 
-                onPress={() => { login(form.email,form.password); }}>
+                onPress={() => validaCampos()}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Ingresar</Text>
                 </View>
