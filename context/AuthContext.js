@@ -4,6 +4,8 @@ import axios from 'axios';
 import { BASE_URL } from "../config";
 import { jwtDecode } from 'jwt-decode';
 import { Alert } from "react-native";
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 export const AuthContext = createContext();
 
@@ -12,19 +14,19 @@ export const AuthProvider = ({children}) => {
     const [userToken, setUserToken] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
 
-
-    const login = (username, password) => {
+    const login = async (username, password) => {
         setIsLoading(true);
         axios.post(`${BASE_URL}/auth/login`, {
             email: username,
             password: password,
             tipoToken: "SESION_MOBILE"
         })
-        .then(res => {
+        .then(async res => {
             if (res.data.token) {
                 const token = res.data.token;
                 const decoded = jwtDecode(token);
-                const pushToken = "58558GIcI3V_BUW09Pq-7T"; //MODIFICAR TOKEN
+                const projectId = Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
+                const pushToken = (await Notifications.getExpoPushTokenAsync({ projectId,})).data;
                 if(decoded.rol === "CLIENTE"){
                     const userInfo = {
                         id: decoded.idUsuario,
