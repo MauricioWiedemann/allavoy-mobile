@@ -72,7 +72,7 @@ export function SignUp() {
             );
           }
         }).catch(e => {
-          Alert.alert('Error', e.response.data.message);
+          Alert.alert('Error', e.response.data);
         })
         ;
     }

@@ -1,5 +1,5 @@
 import React, { useState,useContext, useEffect } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard,} from 'react-native';
+import {StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, ActivityIndicator } from 'react-native';
 import { NavigationContainer, createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import axios from 'axios';
@@ -9,20 +9,24 @@ export function ForgotPass() {
   const navigation = useNavigation();
   const [form, setForm] = useState({ email: '' });
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleForgotPass = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.post(`${BASE_URL}/auth/recuperar-password`, { email: form.email })
-      .then(res => {
-        return res.data;
-      }).then(data => {
-        return data;
+        .then(res => {
+          return res.data;
+        }).then(data => {
+          return data;
       });
+      setIsLoading(false);
       alert(response);
       navigation.navigate('Loguearse');
     } catch (e) {
       alert('Error al enviar el mail de recuperación.');
     }
+    setIsLoading(false);
   };
 
   //Ver si el teclado esta abierto o no
@@ -79,9 +83,14 @@ export function ForgotPass() {
               </View>
             </TouchableOpacity>
           </View>
-
           </View>
         </View>
+        {isLoading && (
+          <>
+            <ActivityIndicator size="150" color="#075eec" style={styles.indicator} />
+            <View style={styles.loading} />
+          </>
+        )}
       </SafeAreaView>
     );
   }
@@ -191,6 +200,19 @@ export function ForgotPass() {
       lineHeight: 26,
       fontWeight: '1000',
       color: '#000000',
+    },
+    loading: {
+      position: 'absolute',
+      height: '120%',
+      width: '120%',
+      backgroundColor: 'black',
+      opacity: 0.33,
+    },
+    indicator: {
+      zIndex: 1,
+      position: 'absolute',
+      left: '31%',
+      marginTop: 350,
     },
   });
 

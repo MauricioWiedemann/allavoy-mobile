@@ -18,11 +18,13 @@ export const AuthProvider = ({children}) => {
         axios.post(`${BASE_URL}/auth/login`, {
             email: username,
             password: password,
+            tipoToken: "SESION_MOBILE"
         })
         .then(res => {
             if (res.data.token) {
                 const token = res.data.token;
                 const decoded = jwtDecode(token);
+                const pushToken = "58558GIcI3V_BUW09Pq-7T"; //MODIFICAR TOKEN
                 if(decoded.rol === "CLIENTE"){
                     const userInfo = {
                         id: decoded.idUsuario,
@@ -32,6 +34,14 @@ export const AuthProvider = ({children}) => {
                     setUserToken(token);
                     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
                     AsyncStorage.setItem('userToken', token);
+
+                    axios.post(`${BASE_URL}/auth/save-push`, {
+                        token: pushToken, 
+                        usuario: decoded.idUsuario
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
                 } else {
                     Alert.alert("Error", "Usuario no encontrado");
                 }
@@ -40,6 +50,7 @@ export const AuthProvider = ({children}) => {
         .catch(e => {
             console.log(`isLogged in error ${e}`);
         });
+
         setIsLoading(false);
     }
 
@@ -52,6 +63,9 @@ export const AuthProvider = ({children}) => {
                 }
             }).then(response => {
                 return response;
+            })
+            await axios.post(`${BASE_URL}/auth/delete-push`, {
+                token: pushToken 
             })
         } catch (e) {
             console.log("Error: ", e);

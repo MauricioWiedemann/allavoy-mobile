@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { BASE_URL } from "../config";
 import { AuthContext } from '../context/AuthContext';
@@ -31,6 +31,7 @@ export function CartDetail({ route }) {
   const [viajeVuelta, setViajeVuelta] = useState([]);
   const [viajesCargados, setViajesCargados] = useState(false);
   const [descuento, setDescuento] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   //info de viaje ida
   useEffect(() => {
@@ -81,6 +82,7 @@ export function CartDetail({ route }) {
   };
 
   const handlePayment = async (idPago) => {
+    setIsLoading(true);
     let userInfoStorage = JSON.parse( await AsyncStorage.getItem('userInfo') );
     const idPasajes = [];
     try {
@@ -123,6 +125,7 @@ export function CartDetail({ route }) {
       console.log(error.response.data);
       Alert.alert('Error', 'No se pudo realizar la compra.');
     }
+    setIsLoading(false);
   };
 
   return (
@@ -237,7 +240,7 @@ export function CartDetail({ route }) {
             title="Comprar"
             buttonStyles={styles?.btn}
             btnTextStyles={styles?.btnText}
-            amount={((precio)-precio*descuento)/40}
+            amount={Number(((precio-(precio*descuento))/40).toFixed(2))}
             success={(a) => { handlePayment(a.orderID); }}
             failed={(a) => { Alert("Error", "Algo ha salido mal.") }}
           />
@@ -248,6 +251,12 @@ export function CartDetail({ route }) {
             </View>
           </TouchableOpacity>
         </View>
+        {isLoading && (
+          <>
+            <ActivityIndicator size="150" color="#075eec" style={styles.indicator} />
+            <View style={styles.loading} />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -356,6 +365,19 @@ const styles = StyleSheet.create({
     bottom: 30,
     gap: 10,
     paddingHorizontal: 20,
+  },
+  loading: {
+    position: 'absolute',
+    height: '120%',
+    width: '120%',
+    backgroundColor: 'black',
+    opacity: 0.33,
+  },
+  indicator: {
+    zIndex: 1,
+    position: 'absolute',
+    left: '36%',
+    marginTop: 350,
   },
 });
 
