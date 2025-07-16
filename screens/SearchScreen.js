@@ -88,6 +88,13 @@ import { useNotification } from '../context/NotificationContext';
       });
     };
 
+    const findByValue = (key) => {
+      for (let pair of origenItems) {
+          if(pair.value === key)
+            return pair;
+      }
+    }
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
       <ScrollView
@@ -115,7 +122,7 @@ import { useNotification } from '../context/NotificationContext';
                 setOpen={setOrigenOpen}
                 setValue={val => {
                   setOrigenValue(val());
-                  setForm({ ...form, origen: val() });
+                  setForm({ ...form, origen: findByValue(val()) });
                 }}
                 setItems={setOrigenItems}
                 searchable={true}
@@ -134,7 +141,7 @@ import { useNotification } from '../context/NotificationContext';
                 setOpen={setDestinoOpen}
                 setValue={val => {
                   setDestinoValue(val());
-                  setForm({ ...form, destino: val() });
+                  setForm({ ...form, destino: findByValue(val()) });
                 }}
                 setItems={setDestinoItems}
                 searchable={true}

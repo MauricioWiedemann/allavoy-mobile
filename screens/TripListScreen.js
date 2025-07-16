@@ -29,8 +29,8 @@ import { BASE_URL } from "../config";
     const [data, setData] = useState([]);
     const [page, setPages] = useState(1);
     const fechaViaje = fecha;
-    const localidadOrigen = origen;
-    const localidadDestino = destino;
+    const localidadOrigen = origen.value;
+    const localidadDestino = destino.value;
 
     useEffect(() => {
       getdata();
@@ -183,7 +183,7 @@ import { BASE_URL } from "../config";
           <Text style={styles.title}>Resultados de Viajes</Text>
             <View style={styles.formAction}>
                 <Text style={styles.subtitle}>
-                    <Text style={{ fontSize: 20 }}>Origen: {localidadOrigen} -{'>'} Destino: {localidadDestino}</Text>
+                    <Text style={{ fontSize: 16 }}>{origen.label} -{'>'} {destino.label}</Text>
                 </Text>
                 <Text style={styles.subtitle}>
                     <Text style={{ fontSize: 20 }}>Fecha: {fechaViaje.replace("T", " ")}</Text>
