@@ -46,7 +46,7 @@ import { BASE_URL } from "../config";
       }).then((res) => {
         setData(res.data);
       }).catch(e => {
-        Alert.alert('Error', e.response.data.message);
+        Alert.alert('Error', e.response.data);
       });
     };
 
@@ -221,7 +221,6 @@ import { BASE_URL } from "../config";
       fontWeight: '500',
       color: '#929292',
     },
-    /** Header */
     header: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -233,7 +232,6 @@ import { BASE_URL } from "../config";
       alignSelf: 'center',
       marginBottom: 0,
     },
-    /** Form */
     form: {
       flexGrow: 1,
       flexShrink: 1,
@@ -243,61 +241,6 @@ import { BASE_URL } from "../config";
       marginTop: 10,
       marginBottom: 10,
     },
-    formLink: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#075eec',
-      textAlign: 'center',
-    },
-    formFooter: {
-      paddingVertical: 24,
-      fontSize: 15,
-      fontWeight: '600',
-      color: '#222',
-      textAlign: 'center',
-      letterSpacing: 0.15,
-    },
-    /** Input */
-    input: {
-      marginBottom: 10,
-    },
-    inputLabel: {
-      fontSize: 15,
-      fontWeight: '600',
-      color: '#222',
-      marginBottom: 0,
-    },
-    inputControl: {
-      height: 50,
-      backgroundColor: '#fff',
-      paddingHorizontal: 16,
-      borderRadius: 12,
-      fontSize: 15,
-      fontWeight: '500',
-      color: '#222',
-      borderWidth: 1,
-      borderColor: '#C9D3DB',
-      borderStyle: 'solid',
-    },
-    /** Button */
-    btn: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: 30,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderWidth: 1,
-      backgroundColor: '#075eec',
-      borderColor: '#075eec',
-    },
-    btnText: {
-      fontSize: 25,
-      lineHeight: 26,
-      fontWeight: '1000',
-      color: '#fff',
-    },
-    /** Item Box */
     itemBox: {
       backgroundColor: '#fff',
       borderRadius: 12,
@@ -311,12 +254,6 @@ import { BASE_URL } from "../config";
       flexDirection: 'row',
       alignItems: 'center',
     },
-    itemImageStyle: {
-      width: 60,
-      height: 60,
-      borderRadius: 30,
-      marginRight: 16,
-    },
     contentWrapperStyle: {
       flex: 1,
     },
@@ -324,9 +261,5 @@ import { BASE_URL } from "../config";
       fontSize: 18,
       fontWeight: 'bold',
       color: '#222',
-    },
-    txtCountryStyle: {
-      fontSize: 15,
-      color: '#666',
     },
   });

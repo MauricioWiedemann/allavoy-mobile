@@ -100,6 +100,7 @@ import { AuthContext } from '../context/AuthContext';
   }
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       flexGrow: 1,
       flexShrink: 1,
       flexBasis: 0,

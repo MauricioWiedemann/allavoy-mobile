@@ -130,7 +130,10 @@ export function CartDetail({ route }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, padding: 24 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.header}>
           <Image
             alt="App Logo"
@@ -235,7 +238,7 @@ export function CartDetail({ route }) {
 
         <View style={styles.formAction}>
           <PayPal
-            popupContainerStyle={{ height: 500 }}
+            popupContainerStyle={{ height: 720  }}
             onPress={(startProcess) => sendPayment(startProcess)}
             title="Comprar"
             buttonStyles={styles?.btn}
@@ -264,6 +267,7 @@ export function CartDetail({ route }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
@@ -287,28 +291,6 @@ const styles = StyleSheet.create({
     color: '#292929',
     textAlign: 'center',
   },
-  seatRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 6,
-  },
-  seat: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#e0e7ef',
-    borderRadius: 8,
-    marginHorizontal: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  seatSelected: {
-    backgroundColor: '#6dc276',
-  },
-  seatText: {
-    color: '#222',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   label: {
     fontSize: 16,
     marginTop: 20,
@@ -323,7 +305,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'bottom',
     justifyContent: 'center',
     borderRadius: 30,
     paddingVertical: 10,
@@ -359,12 +341,6 @@ const styles = StyleSheet.create({
   formAction: {
     marginTop: 15,
     marginBottom: 0,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 30,
-    gap: 10,
-    paddingHorizontal: 20,
   },
   loading: {
     position: 'absolute',

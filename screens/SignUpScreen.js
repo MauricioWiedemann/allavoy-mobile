@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Platform, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Platform, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -79,133 +79,143 @@ export function SignUp() {
   };
 
   //Ver si el teclado esta abierto o no
-      const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-      useEffect(() => {
-        const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
-            setIsKeyboardOpen(true)
-        );
-        const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
-            setIsKeyboardOpen(false)
-        );
-      })
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  useEffect(() => {
+    const keyboardOpenListener = Keyboard.addListener("keyboardDidShow", () =>
+      setIsKeyboardOpen(true)
+    );
+    const keyboardCloseListener = Keyboard.addListener("keyboardDidHide", () =>
+      setIsKeyboardOpen(false)
+    );
+    return () => {
+      keyboardOpenListener.remove();
+      keyboardCloseListener.remove();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image
-            alt="App Logo"
-            resizeMode="contain"
-            style={styles.headerImg}
-            source={require('./../assets/logo.png')}/>
-          <Text style={styles.title}>
-            Registrarse en <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
-          </Text>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Image
+              alt="App Logo"
+              resizeMode="contain"
+              style={styles.headerImg}
+              source={require('./../assets/logo.png')}
+            />
+            <Text style={styles.title}>
+              Registrarse en <Text style={{ color: '#075eec' }}>Alla Voy!</Text>
+            </Text>
+          </View>
+          <View style={styles.form}>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Correo</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                keyboardType="email-address"
+                onChangeText={email => setForm({ ...form, email })}
+                placeholder="pepegon@mail.com"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.email} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Nombre</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={nombre => setForm({ ...form, nombre })}
+                placeholder="Pepe"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.nombre} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Apellido</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={apellido => setForm({ ...form, apellido })}
+                placeholder="Gonzales"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.apellido} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Cedula</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={cedula => setForm({ ...form, cedula })}
+                placeholder="1234567-8"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={form.cedula} />
+            </View>
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Fecha de Nacimiento</Text>
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={[styles.inputControl, { justifyContent: 'center' }]}
+              >
+                <Text style={{ color: form.fechaNac ? '#222' : '#6b7280', fontSize: 15 }}>
+                  {form.fechaNac ? form.fechaNac : 'Seleccionar fecha'}
+                </Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={form.fechaNac ? new Date(form.fechaNac) : new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, selectedDate) => {
+                    setShowDatePicker(false);
+                    if (selectedDate) {
+                      const d = selectedDate;
+                      const fechaFormateada = `${d.getFullYear().toString()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+                      setForm({ ...form, fechaNac: fechaFormateada });
+                    }
+                  }}
+                />
+              )}
+            </View>                        
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Constraseña</Text>
+              <TextInput
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={password => setForm({ ...form, password })}
+                placeholder="********"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                secureTextEntry={true}
+                value={form.password} />
+            </View>
+            <View style={styles.formAction}>
+              <TouchableOpacity onPress={async () => { crearCuenta(form); }} >
+                <View style={styles.btn}>
+                  <Text style={styles.btnText}>Registrarse</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.form}>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Correo</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="email-address"
-              onChangeText={email => setForm({ ...form, email })}
-              placeholder="pepegon@mail.com"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.email} />
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Nombre</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={nombre => setForm({ ...form, nombre })}
-              placeholder="Pepe"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.nombre} />
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Apellido</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={apellido => setForm({ ...form, apellido })}
-              placeholder="Gonzales"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.apellido} />
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Cedula</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={cedula => setForm({ ...form, cedula })}
-              placeholder="1234567-8"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.cedula} />
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Fecha de Nacimiento</Text>
-            <TouchableOpacity
-              onPress={() => setShowDatePicker(true)}
-              style={[styles.inputControl, { justifyContent: 'center' }]}
-            >
-              <Text style={{ color: form.fechaNac ? '#222' : '#6b7280', fontSize: 15 }}>
-                {form.fechaNac ? form.fechaNac : 'Seleccionar fecha'}
-              </Text>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={form.fechaNac ? new Date(form.fechaNac) : new Date()}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(event, selectedDate) => {
-                  setShowDatePicker(false);
-                  if (selectedDate) {
-                    const d = selectedDate;
-                    const fechaFormateada = `${d.getFullYear().toString()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
-                    setForm({ ...form, fechaNac: fechaFormateada });
-                  }
-                }}
-              />
-            )}
-          </View>                        
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Constraseña</Text>
-            <TextInput
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={password => setForm({ ...form, password })}
-              placeholder="********"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              secureTextEntry={true}
-              value={form.password} />
-          </View>
-          <View style={styles.formAction}>
-            <TouchableOpacity onPress={async () => {crearCuenta(form); }} >
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Registrarse</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      </ScrollView>
       {!isKeyboardOpen && (
-        <Button onPress={() => navigation.navigate('Loguearse')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Loguearse')}>
           <Text style={styles.formFooter}>
             ¿Ya se encuentra registrado?{' '}
             <Text style={{ textDecorationLine: 'underline' }}>Loguearse</Text>
           </Text>
-        </Button>
+        </TouchableOpacity>
       )}
     </SafeAreaView>
   );
@@ -247,12 +257,6 @@ const styles = StyleSheet.create({
   formAction: {
     marginTop: 5,
     marginBottom: 15,
-  },
-  formLink: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#075eec',
-    textAlign: 'center',
   },
   formFooter: {
     paddingVertical: 24,

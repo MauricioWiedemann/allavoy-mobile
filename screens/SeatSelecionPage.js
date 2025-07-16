@@ -107,7 +107,10 @@ export function SeatSelecionPage({ route }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.header}>
           <Image
             alt="App Logo"
@@ -172,7 +175,7 @@ export function SeatSelecionPage({ route }) {
             source={require('./../assets/ocupado.png')}
           /> 
         </View>
-        <View style={styles.formAction}>
+        <View style={[styles.formAction, { padding: 24 }]}>
             <TouchableOpacity 
               disabled={selectedSeats.length !== cantidad}
               onPress={() => handleConfirm()}>
@@ -188,6 +191,7 @@ export function SeatSelecionPage({ route }) {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, Image, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Alert, Platform } from 'react-native';
+import { SafeAreaView, View, Text, Image, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Alert, Platform, ScrollView } from 'react-native';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from "../config";
@@ -87,6 +87,10 @@ export default function UserInfo() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+      <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+            >
       <View style={[styles.container, { paddingBottom: 100 }]}>
         <View style={styles.header}>
           <Image
@@ -144,7 +148,7 @@ export default function UserInfo() {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ height: 50 }} />
+      <View style={{ height: 10 }} />
       <View style={styles.logoutContainer}>
         <TouchableOpacity onPress={logout} style={{ width: '100%' }}>
           <View style={[styles.btnCerrarSesion, { width: '100%' }]}>
@@ -152,6 +156,7 @@ export default function UserInfo() {
           </View>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

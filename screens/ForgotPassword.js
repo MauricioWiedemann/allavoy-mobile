@@ -132,20 +132,6 @@ export function ForgotPass() {
       marginTop: 15,
       marginBottom: 0,
     },
-    formLink: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#075eec',
-      textAlign: 'center',
-    },
-    formFooter: {
-      paddingVertical: 24,
-      fontSize: 15,
-      fontWeight: '600',
-      color: '#222',
-      textAlign: 'center',
-      letterSpacing: 0.15,
-    },
     input: {
       marginBottom: 40,
     },

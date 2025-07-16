@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Alert, Linking } from 'react-native';
+import {Platform, StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, TextInput, Keyboard, Alert, Linking, ScrollView } from 'react-native'; // <-- agrega ScrollView
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from 'expo-checkbox';
@@ -90,6 +90,10 @@ import { useNotification } from '../context/NotificationContext';
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
           <View style={styles.header}>
             <Image
@@ -270,7 +274,8 @@ import { useNotification } from '../context/NotificationContext';
             resizeMode="contain"
           />
         </TouchableOpacity>
-      </SafeAreaView>
+      </ScrollView>
+    </SafeAreaView>
     );
   }
   const styles = StyleSheet.create({
@@ -310,19 +315,6 @@ import { useNotification } from '../context/NotificationContext';
     formAction: {
       marginTop: 5,
       marginBottom: 15,
-    },
-    formLink: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: '#075eec',
-      textAlign: 'center',
-    },
-    formFooter: {
-      paddingVertical: 24,
-      fontSize: 15,
-      fontWeight: '600',
-      color: '#222',
-      textAlign: 'center',
     },
     input: {
       marginBottom: 10,
