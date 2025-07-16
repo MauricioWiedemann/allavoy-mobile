@@ -16,17 +16,18 @@ export const AuthProvider = ({children}) => {
 
     const login = async (username, password) => {
         setIsLoading(true);
-        axios.post(`${BASE_URL}/auth/login`, {
-            email: username,
-            password: password,
-            tipoToken: "SESION_MOBILE"
-        })
-        .then(async res => {
+        try {
+            const res = await axios.post(`${BASE_URL}/auth/login`, {
+                email: username,
+                password: password,
+                tipoToken: "SESION_MOBILE"
+            });
             if (res.data.token) {
                 const token = res.data.token;
                 const decoded = jwtDecode(token);
                 const projectId = Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
-                const pushToken = (await Notifications.getExpoPushTokenAsync({ projectId,})).data;
+                const pushToken = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+
                 if(decoded.rol === "CLIENTE"){
                     const userInfo = {
                         id: decoded.idUsuario,
@@ -37,22 +38,21 @@ export const AuthProvider = ({children}) => {
                     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
                     AsyncStorage.setItem('userToken', token);
 
-                    axios.post(`${BASE_URL}/auth/save-push`, {
-                        token: pushToken, 
-                        usuario: decoded.idUsuario
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-                } else {
+                    try {
+                        await axios.post(`${BASE_URL}/auth/save-push`, {
+                            token: pushToken, 
+                            usuario: decoded.idUsuario
+                        });
+                    } catch (e) {
+                        console.log('Error guardando push token:', e);
+                    }
+                }else {
                     Alert.alert("Error", "Usuario no encontrado");
                 }
             }
-        })
-        .catch(e => {
+        }catch (e) {
             console.log(`isLogged in error ${e}`);
-        });
-
+        }
         setIsLoading(false);
     }
 

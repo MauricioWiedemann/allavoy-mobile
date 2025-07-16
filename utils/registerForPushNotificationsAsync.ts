@@ -41,7 +41,6 @@ export async function registerForPushNotificationsAsync() {
           projectId,
         })).data;
 
-        console.log('Push notification token:', pushTokenString);
       } catch (error) {
         console.error('Error getting push token:', error);
       }

@@ -20,7 +20,6 @@ function AppNav () {
     
     return (
         <NavigationContainer>
-            {console.log('userToetjtehheken en AppNav:', userToken)}
             {userToken !== null ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
     )

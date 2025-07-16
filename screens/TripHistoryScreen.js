@@ -67,12 +67,20 @@ export default function TripHistory() {
         </Text>
         <Text style={styles.tripDetail}>
           <Text style={{ fontWeight: 'bold' }}>Devuelto: </Text>
-          {h.devuelto ? 'Si' : 'No'}
+          <Text style={{ color: h.devuelto ? 'red' : 'green', fontWeight: 'bold' }}>
+            {h.devuelto ? 'Si' : 'No'}
+          </Text>
         </Text>
         {h.devuelto && h.fechaDevolucion && (
           <Text style={styles.tripDetail}>
             <Text style={{ fontWeight: 'bold' }}>Fecha devolucion: </Text>
-            {h.fechaDevolucion}
+            <Text style={{ color: 'red', fontWeight: 'bold' }}>
+              {
+                h.fechaDevolucion
+                  .replace('T', ' ')
+                  .replace(/\.\d+$/, '') // Quita los milisegundos
+              }
+            </Text>
           </Text>
         )}
       </View>
