@@ -7,6 +7,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import axios from 'axios';
 import { BASE_URL } from "../config";
 import { useNotification } from '../context/NotificationContext';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
   export function SearchBus() {
     const { expoPushToken, notification, error } = useNotification();
@@ -97,9 +98,10 @@ import { useNotification } from '../context/NotificationContext';
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
+        extraScrollHeight={30}
       >
         <View style={styles.container}>
           <View style={styles.header}>
@@ -130,6 +132,7 @@ import { useNotification } from '../context/NotificationContext';
                 placeholder="Selecciona una localidad de origen"
                 zIndex={1000}
                 style={{marginBottom: origenOpen ? 120 : 10}}
+                listMode="SCROLLVIEW"
               />
             </View>
             <View style={styles.input}>
@@ -150,6 +153,7 @@ import { useNotification } from '../context/NotificationContext';
                 zIndexInverse={1000}
                 zIndex={900}
                 style={{marginBottom: destinoOpen ? 120 : 10}}
+                listMode="SCROLLVIEW"
               />
             </View>
             <View style={styles.input}>
@@ -281,7 +285,7 @@ import { useNotification } from '../context/NotificationContext';
             resizeMode="contain"
           />
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
     );
   }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StatusBar } from 'react-native';
 
 import { AuthProvider } from './context/AuthContext';
 import AppNav from './navigation/AppNav';
@@ -16,10 +17,13 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NotificationProvider>
-        <AppNav />
-      </NotificationProvider>
-    </AuthProvider>
+    <>
+      <StatusBar backgroundColor="#e8ecf4" barStyle="dark-content" />
+      <AuthProvider>
+        <NotificationProvider>
+          <AppNav />
+        </NotificationProvider>
+      </AuthProvider>
+    </>
   );
 }

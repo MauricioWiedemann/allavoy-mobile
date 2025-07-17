@@ -236,31 +236,33 @@ export function CartDetail({ route }) {
           </Text>
         </View>
 
+      </ScrollView>
+      <PayPal
+        popupContainerStyle={{ flex: 1, height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+        onPress={(startProcess) => sendPayment(startProcess)}
+        title="Comprar"
+        buttonStyles={styles?.btn}
+        btnTextStyles={styles?.btnText}
+        amount={Number(((precio-(precio*descuento))/40).toFixed(2))}
+        success={(a) => { handlePayment(a.orderID); }}
+        failed={(a) => { Alert("Error", "Algo ha salido mal.") }}
+      />
+      <View style={{paddingHorizontal: 24, paddingBottom: 24}}>
         <View style={styles.formAction}>
-          <PayPal
-            popupContainerStyle={{ height: 720  }}
-            onPress={(startProcess) => sendPayment(startProcess)}
-            title="Comprar"
-            buttonStyles={styles?.btn}
-            btnTextStyles={styles?.btnText}
-            amount={Number(((precio-(precio*descuento))/40).toFixed(2))}
-            success={(a) => { handlePayment(a.orderID); }}
-            failed={(a) => { Alert("Error", "Algo ha salido mal.") }}
-          />
           <TouchableOpacity
-              onPress={() => navigation.navigate('AppTabs')}>
+            onPress={() => navigation.navigate('AppTabs')}>
             <View style={styles.btnCancel} >
               <Text style={styles.btnTextCancel}>Cancelar</Text>
             </View>
           </TouchableOpacity>
         </View>
-        {isLoading && (
-          <>
-            <ActivityIndicator size="150" color="#075eec" style={styles.indicator} />
-            <View style={styles.loading} />
-          </>
-        )}
-      </ScrollView>
+      </View>
+      {isLoading && (
+        <>
+          <ActivityIndicator size="150" color="#075eec" style={styles.indicator} />
+          <View style={styles.loading} />
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -313,7 +315,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#075eec',
     borderColor: '#075eec',
-    width: '100%'
+    width: '90%',
+
   },
   btnText: {
     fontSize: 25,

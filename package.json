@@ -1,5 +1,5 @@
 {
-  "name": "prueba_concepto_mobile",
+  "name": "alla_voy",
   "license": "0BSD",
   "version": "1.0.0",
   "main": "index.js",
@@ -22,9 +22,11 @@
     "expo": "~52.0.43",
     "expo-checkbox": "~4.0.1",
     "expo-constants": "~17.0.8",
+    "expo-dev-client": "~5.0.20",
+    "expo-device": "~7.0.3",
+    "expo-notifications": "~0.29.14",
     "expo-paypal": "^1.4.1",
     "expo-sharing": "~13.0.1",
-    "expo-notifications": "~0.29.14",
     "expo-status-bar": "~2.0.1",
     "formik": "^2.4.6",
     "jwt-decode": "^4.0.0",
@@ -34,14 +36,13 @@
     "react-native": "0.76.9",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.12.4",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "^4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "^13.15.0",
-    "styled-components": "^6.1.17",
-    "expo-device": "~7.0.3",
-    "expo-dev-client": "~5.0.20"
+    "styled-components": "^6.1.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
