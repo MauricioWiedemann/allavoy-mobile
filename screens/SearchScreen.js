@@ -164,7 +164,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
               >
                 <View style={{ flex: 1, justifyContent: 'center' }}>
                   <Text style={{ color: form.fecha ? '#222' : '#6b7280', fontSize: 15, textAlignVertical: 'center' }}>
-                    {form.fecha ? form.fecha : 'Seleccionar fecha'}
+                    {form.fecha ? form.fecha.split('T')[0] : 'Seleccionar fecha'}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -238,7 +238,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
                 >
                   <View style={{ flex: 1, justifyContent: 'center' }}>
                     <Text style={{ color: form.fechaRegreso ? '#222' : '#6b7280', fontSize: 15, textAlignVertical: 'center' }}>
-                      {form.fechaRegreso ? form.fechaRegreso : 'Seleccionar fecha de regreso'}
+                      {form.fechaRegreso ? form.fechaRegreso.split('T')[0] : 'Seleccionar fecha de regreso'}
                     </Text>
                   </View>
                 </TouchableOpacity>
